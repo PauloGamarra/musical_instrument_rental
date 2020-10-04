@@ -1,2 +1,4 @@
 flask
 flask-login
+sqlalchemy
+psycopg2
