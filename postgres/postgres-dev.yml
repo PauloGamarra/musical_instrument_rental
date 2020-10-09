@@ -1,0 +1,12 @@
+version: "1"
+services:
+  postgres-dev:
+    image: music_rental:postgres-dev
+    ports:
+      - "5432:5432"
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres.local:5432
+      POSTGRES_PASSWORD: password
+      RENTAL_POSTGRES_USER: rental_admin
+      RENTAL_POSTGRES_DB_NAME: music_rental
+
