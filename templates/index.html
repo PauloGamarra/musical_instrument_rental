@@ -1,49 +1,75 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
 
-<h1>Welcome, friend</h1>
+{% if current_user.is_authenticated %}
 
-<h2>Register</h2>
+    <h1>Olá, {{ current_user.name }}.</h1>
+    <h2>Você já está logado. Caso queira deslogar, clique no botão abaixo:</h2>
+    <input type="button" onclick="location.href='/logout';" value="Deslogar"/>
 
-<form action="/" method="POST">
+{% else %}
 
-    <label>Username</label>
-    <input type="text" id="username" name="username" placeholder="Select a username">
+    <h1>Bem Vindo ao Sistema de Locação de Instrumentos Musicais</h1>
 
-    <label>Email</label>
-    <input type="email" id="email" name="email" placeholder="Enter your email">
+    <h2>Tens o que é preciso? Entre agora mesmo</h2>
 
-    <label>Password</label>
-    <input type="password" id="password" name="password" placeholder="Create a password">
-    
-    <input type="hidden" name="type" value="register">
+    <form action="/" method="POST">
 
-    <button type="submit">Sign up</button>
+        <div class="campo-form">
+            <label>Usuário</label>
+            <input type="text" id="username" name="username" placeholder="Nome de usuário">
+        </div>
 
-</form>
+        <div class="campo-form">
+            <label>E-mail</label>
+            <input type="email" id="email" name="email" placeholder="endereço@dominio.com.br">
+        </div>
 
-{% if error_register %}
-<p>Erro: {{ error_register }}</p>
-{% endif %}
+        <div class="campo-form">
+            <label>Senha</label>
+            <input type="password" id="password" name="password" placeholder="Sua senha secreta">
+        </div>
 
-<h2>Log-In</h2>
+        <input type="hidden" name="type" value="login">
 
-<form action="/" method="POST">
+        <div class="campo-form">
+            <button type="submit">Log In</button>
+        </div>
 
-    <label>Username</label>
-    <input type="text" id="username" name="username" placeholder="Select a username">
+    </form>
 
-    <label>Email</label>
-    <input type="email" id="email" name="email" placeholder="Enter your email">
+    {% if error_login %}
+    <p class="error">Erro: {{ error_login }}</p>
+    {% endif %}
 
-    <label>Password</label>
-    <input type="password" id="password" name="password" placeholder="Create a password">
+    <h2>Não tens uma conta? Registra-te agora, tchê</h2>
 
-    <input type="hidden" name="type" value="login">
+    <form action="/" method="POST">
 
-    <button type="submit">Sign up</button>
+        <div class="campo-form">
+            <label>Usuário</label>
+            <input type="text" id="username" name="username" placeholder="Nome de usuário">
+        </div>
 
-</form>
+        <div class="campo-form">
+            <label>E-mail</label>
+            <input type="email" id="email" name="email" placeholder="endereço@dominio.com.br">
+        </div>
 
-{% if error_login %}
-<p class="error">Erro: {{ error_login }}</p>
+        <div class="campo-form">
+            <label>Senha</label>
+            <input type="password" id="password" name="password" placeholder="Sua senha secreta">
+        </div>
+
+        <input type="hidden" name="type" value="register">
+
+        <div class="campo-form">
+            <button type="submit">Criar Conta</button>
+        </div>
+
+    </form>
+
+    {% if error_register %}
+    <p class="error">Erro: {{ error_register }}</p>
+    {% endif %}
+
 {% endif %}
