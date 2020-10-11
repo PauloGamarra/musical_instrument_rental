@@ -21,6 +21,7 @@ login_manager.init_app(app)
 login_manager.login_view = "index"
 
 
+# Necessary for flask-login, gives it the user using its id
 @login_manager.user_loader
 def load_user(user_id):
     with session_scope() as session:
@@ -29,6 +30,7 @@ def load_user(user_id):
         return user
 
 
+# Login and Register page
 @app.route('/', methods=["GET", "POST"])
 def index():
     if request.method == 'POST':
@@ -42,6 +44,7 @@ def index():
         return render_template('index.html')
 
 
+# Route which the user is directed to when they log-in, can only be seen when logged-in
 @app.route('/logged', methods=["GET"])
 @login_required
 def logged_page():
@@ -74,15 +77,18 @@ def register(form):
 
 
 def login(form):
-    username = form["username"]
+    username_email = form["username_email"]
     password = form["password"]
-    email = form["email"]
 
     with session_scope() as session:
-        user = session.query(Users).filter_by(name=username, email=email, password=password).first()
-        if (user):
+        user_user = session.query(Users).filter_by(name=username_email).first()
+        user_email = session.query(Users).filter_by(email=username_email).first()
+        user = user_user or user_email
+        if (user and user.password == password):
             login_user(user, remember=True)
             return redirect('/logged')
+        elif (user):
+            return render_template('index.html', error_login="Senha Incorreta")
         else:
             return render_template('index.html', error_login="Usuário inexistente")
 
