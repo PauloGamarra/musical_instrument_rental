@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from data.database import DatabaseConnector
 from data.models import Users
 from flask_login import LoginManager, login_required, login_user, logout_user
+from sqlalchemy import or_
 
 
 app = Flask(__name__)
@@ -64,7 +65,7 @@ def register(form):
     email = form["email"]
 
     with session_scope() as session:
-        nameQuery = session.query(Users).filter_by(name=username).first()
+        nameQuery = session.query(Users).filter(or_(Users.name == username, Users.email == email)).first()
         if (nameQuery):
             print("Usuario ja existe")
             return render_template('index.html', error_register="Usuário já existe")
