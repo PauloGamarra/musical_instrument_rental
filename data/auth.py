@@ -1,14 +1,12 @@
-from .base import BasePackage
+from .base import BasePackage, RowAlreadyExists, BadRequestForQuery
 from .models import Users
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
 
-class UserAlreadyExists(Exception):
-    def __init__(self, message = 'Error: already exists an user with this e-mail.'):
-        self.__message = message
-
-        super().__init__(self.__message)
+class UserAlreadyExists(RowAlreadyExists):
+    def __init__(self):
+        super().__init__(table='Users')
 
 class Auth(BasePackage):
     def create_user(self, name, email, password):
@@ -21,8 +19,8 @@ class Auth(BasePackage):
             password: The user's password.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            user, 0: Otherwise, with user being the user inserted in database.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            Users, None: Otherwise, with user being the user inserted in database.
 
         Raises:
             UserAlreadyExists: If already exists an user with this e-mail
@@ -33,17 +31,17 @@ class Auth(BasePackage):
                 session.add(user)
                 session.commit()
 
-            return user, 0
-        except IntegrityError as e:
-            if isinstance(e.orig, UniqueViolation):
+            return user, None
+        except IntegrityError as err:
+            if isinstance(err.orig, UniqueViolation):
                 raise UserAlreadyExists()
             else:
                 print(f'Error: {err}')
-                return None, -1
+                return None, err
         except Exception as err:
             print(f'Error: {err}')
 
-            return None, -1
+            return None, err
 
     def get_user(self, name = None, email = None, user_id = None):
         """
@@ -55,22 +53,22 @@ class Auth(BasePackage):
             user_id: The user's id.
 
         Returns:
-            None, -1: If name, email and user_id are None, then returns.
-            None, -2: If some exception was raised querying in database.
-            user, 0: Otherwise, with 'user' being None if the user is not in database or being an object of Users if it is.
+            None, BadRequestForQuery: If name, email and user_id are None, then returns None and an exception explaining the necessary args.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            user, None: Otherwise, with 'user' being None if the user is not in database or being an object of Users if it is.
         """
         if name == None and email == None and user_id == None:
-            return None, -1
+            return None, BadRequestForQuery('Users', ['name', 'email', 'user_id'])
         else:
             try:
                 with self.session_scope() as session:
                     user = session.query(Users).filter(or_(Users.id == user_id, Users.name == name, Users.email == email)).first()
 
-                return user, 0
+                return user, None
             except Exception as err:
                 print(f'Error: {err}')
 
-                return None, -2
+                return None, err
 
     def check_password(self, user, password):
         """
@@ -81,15 +79,15 @@ class Auth(BasePackage):
             password: The user's password.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            bool, 0: Otherwise, with 'bool' being False if the password is wrong or True if the password is the same in the database.
+            None, err: If some exception was raised querying in database.
+            bool, None: Otherwise, with 'bool' being False if the password is wrong or True if the password is the same in the database.
         """
         try:
             with self.session_scope() as session:
                 user = session.query(Users).filter(or_(Users.name == user, Users.email == user), Users.password == password).first()
 
-            return True, 0 if user else False, 0
+            return True, None if user else False, None
         except Exception as err:
             print(f'Error: {err}')
 
-            return None, -1
+            return None, err
