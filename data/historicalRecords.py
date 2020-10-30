@@ -25,7 +25,7 @@ class HistoricalRecords(BasePackage):
 
         Returns:
             None, err: If some exception was raised querying in database, where err is an exception.
-            list, None: Otherwise, with 'list' being a list with all the rows that have this e-mail for lessee.
+            records, None: Otherwise, with 'records' being a list with all the rows that have this e-mail for its lessee.
         """
         try:
             with self.session_scope() as session:
