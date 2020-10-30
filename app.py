@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for
 from data.database import DatabaseConnector
 from data.models import Users
+from data.auth import Auth
 from flask_login import LoginManager, login_required, login_user, logout_user
 from sqlalchemy import or_
 
@@ -25,10 +26,9 @@ login_manager.login_view = "index"
 # Necessary for flask-login, gives it the user using its id
 @login_manager.user_loader
 def load_user(user_id):
-    with session_scope() as session:
-        user = session.query(Users).get(int(user_id))
-        session.expunge_all()
-        return user
+    user, err = Auth(session_scope).get_user(user_id=user_id)
+
+    return user
 
 
 # Login and Register page
@@ -60,38 +60,46 @@ def logout():
 
 
 def register(form):
+    auth = Auth(session_scope)
+
     username = form["username"]
     password = form["password"]
     email = form["email"]
 
-    with session_scope() as session:
-        nameQuery = session.query(Users).filter(or_(Users.name == username, Users.email == email)).first()
-        if (nameQuery):
-            print("Usuario ja existe")
-            return render_template('index.html', error_register="Usuário já existe")
+    userQuery, err = auth.get_user(email=email)
+
+    if userQuery:
+        print("Usuario ja existe")
+        return render_template('index.html', error_register="Usuário já existe")
+    else:
+        user, err = auth.create_user(name=username, email=email, password=password)
+
+        if err:
+            print(f"Alguma coisa deu errado: {err}")
+            return render_template('index.html', error_login="Alguma coisa deu errado.")
         else:
-            user = Users(name=username, email=email, password=password)
-            session.add(user)
-            session.commit()
             login_user(user, remember=True)
             return render_template('register_success.html')
 
 
 def login(form):
-    username_email = form["username_email"]
+    auth = Auth(session_scope)
+    email = form["email"]
     password = form["password"]
 
-    with session_scope() as session:
-        user_user = session.query(Users).filter_by(name=username_email).first()
-        user_email = session.query(Users).filter_by(email=username_email).first()
-        user = user_user or user_email
-        if (user and user.password == password):
+    user, err = auth.get_user(email=email)
+
+    if err:
+        print(f"Alguma coisa deu errado: {err}")
+        return render_template('index.html', error_login="Alguma coisa deu errado.")
+    elif user:
+        if user.password == password:
             login_user(user, remember=True)
             return redirect('/logged')
-        elif (user):
-            return render_template('index.html', error_login="Senha Incorreta")
         else:
-            return render_template('index.html', error_login="Usuário inexistente")
+            return render_template('index.html', error_login="Senha Incorreta")
+    else:
+        return render_template('index.html', error_login="Usuário inexistente")
 
 if __name__ == '__main__':
     app.run()

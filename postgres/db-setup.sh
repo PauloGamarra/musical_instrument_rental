@@ -40,33 +40,27 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
     CREATE TABLE adverts_data (
         id VARCHAR PRIMARY KEY,
         prices VARCHAR NOT NULL,
-        locator VARCHAR NOT NULL,
-        instrument VARCHAR NOT NULL,
-        FOREIGN KEY locator REFERENCES users(email),
-        FOREIGN KEY instrument REFERENCES instruments(id)
+        locator VARCHAR NOT NULL REFERENCES users(email),
+        instrument VARCHAR NOT NULL REFERENCES instruments(id)
     );
 
     CREATE TABLE adverts (
         id SERIAL PRIMARY KEY,
         active BOOL NOT NULL DEFAULT TRUE,
-        data VARCHAR NOT NULL UNIQUE,
-        FOREIGN KEY data REFERENCES adverts_data
+        data VARCHAR NOT NULL UNIQUE REFERENCES adverts_data(id)
     );
 
     CREATE TABLE loans (
         id VARCHAR PRIMARY KEY,
         withdrawal DATE NOT NULL,
         devolution DATE NOT NULL,
-        lessee VARCHAR NOT NULL,
-        ad VARCHAR NOT NULL,
-        FOREIGN KEY lessee REFERENCES users(email),
-        FOREIGN KEY ad REFERENCES adverts(data)
+        lessee VARCHAR NOT NULL REFERENCES users(email),
+        ad VARCHAR NOT NULL REFERENCES adverts(data)
     );
 
     CREATE TABLE records (
         id SERIAL PRIMARY KEY,
-        loan VARCHAR NOT NULL,
-        rating INT NOT NULL CONSTRAINT rating_interval CHECK (rating >= 0 AND rating <= 10),
-        FOREIGN KEY loan REFERENCES loans(id)
+        loan VARCHAR NOT NULL REFERENCES loans(id),
+        rating INT NOT NULL CONSTRAINT rating_interval CHECK (rating >= 0 AND rating <= 10)
     );
 EOSQL

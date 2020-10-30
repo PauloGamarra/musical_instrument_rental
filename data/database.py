@@ -16,7 +16,7 @@ class DatabaseConnector:
         configure the session.
         """
         engine = create_engine(cls._build_uri(), echo=True)
-        cls.Session = sessionmaker()
+        cls.Session = sessionmaker(expire_on_commit=False)
         cls.Session.configure(bind=engine)
 
     @classmethod
