@@ -30,7 +30,7 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
 
     CREATE TABLE instruments (
         id VARCHAR PRIMARY KEY,
-        class VARCHAR NOT NULL,
+        instrument_class VARCHAR NOT NULL,
         instrument VARCHAR NOT NULL,
         brand VARCHAR NOT NULL,
         model VARCHAR NOT NULL,
