@@ -16,8 +16,8 @@ class SubPackageInstruments(BasePackage):
             registry: The registry code of the instrument.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            obj, 0: Otherwise, with 'obj' being the row inserted in the table.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            obj, None: Otherwise, with 'obj' being the row inserted in the table.
         """
         instrument_id = sha1(f'{class_name}-{instrument}-{brand}-{model}-{registry}'.encode()).hexdigest()
         
@@ -25,15 +25,15 @@ class SubPackageInstruments(BasePackage):
 
     def get_by_attr(self, attr, values=[]):
         """
-        This function gets all the instruments whom attr is in values list.
+        This function gets all the instruments whose attr is in values list.
 
         Args:
             attr: An attribute of instruments table.
             values: A list with the required values for attr.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            list, 0: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
         """
         return self.get_objects_by_attr(table=Instruments, attr=attr, values=values)
 
@@ -49,8 +49,8 @@ class SubPackageAdverts(BasePackage):
             instrument: The id of a row in instruments table.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            obj, 0: Otherwise, with 'obj' being the row inserted in the table.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            obj, None: Otherwise, with 'obj' being the row inserted in the table.
         """
         advert_data_id = sha1(f'{prices}-{locator}-{instrument}'.encode()).hexdigest()
 
@@ -60,15 +60,15 @@ class SubPackageAdverts(BasePackage):
 
     def get_by_attr(self, attr, values=[]):
         """
-        This function gets all the adverts whom attr is in values list.
+        This function gets all the adverts whose attr is in values list.
 
         Args:
             attr: An attribute of adverts table.
             values: A list with the required values for attr.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            list, 0: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
         """
         return self.get_objects_by_attr(table=Adverts, attr=attr, values=values)
 
@@ -84,8 +84,8 @@ class SubPackageLoans(BasePackage):
             ad: The id of a row in adverts data table.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            obj, 0: Otherwise, with 'obj' being the row inserted in the table.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            obj, None: Otherwise, with 'obj' being the row inserted in the table.
         """
         loan_id = sha1(f'{withdrawal}-{devolution}-{lessee}-{ad}'.encode()).hexdigest()
 
@@ -93,15 +93,15 @@ class SubPackageLoans(BasePackage):
 
     def get_by_attr(self, attr, values=[]):
         """
-        This function gets all the loans whom attr is in values list.
+        This function gets all the loans whose attr is in values list.
 
         Args:
             attr: An attribute of loans table.
             values: A list with the required values for attr.
 
         Returns:
-            None, -1: If some exception was raised querying in database.
-            list, 0: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
         """
         return self.get_objects_by_attr(table=Loans, attr=attr, values=values)
 

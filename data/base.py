@@ -41,7 +41,7 @@ class BasePackage():
 
     def get_objects_by_attr(self, table, attr, values=[]):
         """
-        This function gets all the objects whom attr in values list.
+        This function gets all the objects whose attr is in values list.
 
         Args:
             table: A sqlalchemy table.
