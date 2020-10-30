@@ -55,7 +55,7 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
         withdrawal DATE NOT NULL,
         devolution DATE NOT NULL,
         lessee VARCHAR NOT NULL REFERENCES users(email),
-        ad VARCHAR NOT NULL REFERENCES adverts(data)
+        ad VARCHAR NOT NULL REFERENCES adverts_data(id)
     );
 
     CREATE TABLE records (

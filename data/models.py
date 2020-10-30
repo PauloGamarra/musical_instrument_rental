@@ -56,7 +56,7 @@ class Loans(Base):
     withdrawal = Column(Date)
     devolution = Column(Date)
     lessee = Column(String, ForeignKey('users.email'))
-    ad = Column(String, ForeignKey('adverts.data'))
+    ad = Column(String, ForeignKey('adverts_data.id'))
 
     def __repr__(self):
         return "<Loan(withdrawal='%s', devolution='%s', lessee='%s', ad='%s')>" % (self.withdrawal, self.devolution, self.lessee, self.ad)
