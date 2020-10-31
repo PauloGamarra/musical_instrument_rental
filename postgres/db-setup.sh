@@ -22,9 +22,9 @@ EOSQL
 
 psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POSTGRES_DB_NAME" <<-EOSQL
     CREATE TABLE users (
-        id SERIAL PRIMARY KEY,
+        id VARCHAR PRIMARY KEY,
         name VARCHAR NOT NULL,
-        email VARCHAR NOT NULL UNIQUE,
+        email VARCHAR NOT NULL,
         password VARCHAR NOT NULL
     );
 
@@ -34,7 +34,8 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
         instrument VARCHAR NOT NULL,
         brand VARCHAR NOT NULL,
         model VARCHAR NOT NULL,
-        registry VARCHAR NOT NULL
+        registry VARCHAR NOT NULL,
+        popular BOOL NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE adverts_data (
@@ -45,9 +46,9 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
     );
 
     CREATE TABLE adverts (
-        id SERIAL PRIMARY KEY,
+        id VARCHAR PRIMARY KEY,
         active BOOL NOT NULL DEFAULT TRUE,
-        data VARCHAR NOT NULL UNIQUE REFERENCES adverts_data(id)
+        data VARCHAR NOT NULL REFERENCES adverts_data(id)
     );
 
     CREATE TABLE loans (

@@ -15,9 +15,9 @@ class BasePackage():
     def __init__(self, session_scope):
         self.session_scope = session_scope
 
-    def insert_object(self, table, **kwargs):
+    def upsert_object(self, table, **kwargs):
         """
-        This function inserts an object in the given table.
+        This function upserts an object in the given table.
 
         Args:
             table: A sqlalchemy table.
@@ -64,3 +64,24 @@ class BasePackage():
                 return None, err
         else:
             return [], None
+
+    def get_all_objects(self, table):
+        """
+        This function gets all the objects in the given table.
+
+        Args:
+            table: A sqlalchemy table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the given table.
+        """
+        try:
+            with self.session_scope() as session:
+                objects = session.query(table).all()
+
+            return objects, None
+        except Exception as err:
+            print(f'Error: {err}')
+
+            return None, err

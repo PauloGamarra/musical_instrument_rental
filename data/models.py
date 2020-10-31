@@ -7,9 +7,9 @@ Base = declarative_base()
 class Users(UserMixin, Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     name = Column(String)
-    email = Column(String, unique=True)
+    email = Column(String)
     password = Column(String)
 
     def __repr__(self):
@@ -24,9 +24,10 @@ class Instruments(Base):
     brand = Column(String)
     model = Column(String)
     registry = Column(String)
+    popular = Column(Boolean, default=False)
     
     def __repr__(self):
-        return "<Instrument(class='%s', instrument='%s', brand='%s', model='%s', registry='%s')>" % (self.instrument_class, self.instrument, self.brand, self.model, self.registry)
+        return "<Instrument(class='%s', instrument='%s', brand='%s', model='%s', registry='%s', popular='%s')>" % (self.instrument_class, self.instrument, self.brand, self.model, self.registry, self.popular)
 
 class AdvertsData(Base):
     __tablename__ = 'adverts_data'
@@ -42,7 +43,7 @@ class AdvertsData(Base):
 class Adverts(Base):
     __tablename__ = 'adverts'
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     active = Column(Boolean, default=True)
     data = Column(String, ForeignKey('adverts_data.id'))
 

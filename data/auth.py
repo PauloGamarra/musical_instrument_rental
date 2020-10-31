@@ -3,6 +3,7 @@ from .models import Users
 from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
+from hashlib import sha1
 
 class UserAlreadyExists(RowAlreadyExists):
     def __init__(self):
@@ -25,9 +26,11 @@ class Auth(BasePackage):
         Raises:
             UserAlreadyExists: If already exists an user with this e-mail
         """
+        user_id = sha1(f'{email}'.encode()).hexdigest()
+
         try:
             with self.session_scope() as session:
-                user = Users(name=name, email=email, password=password)
+                user = Users(id=user_id, name=name, email=email, password=password)
                 session.add(user)
                 session.commit()
 
@@ -69,6 +72,16 @@ class Auth(BasePackage):
                 print(f'Error: {err}')
 
                 return None, err
+
+    def get_all_users(self):
+        """
+        This function gets all the users in the users table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the users table.
+        """
+        return self.get_all_objects(Users)
 
     def check_password(self, user, password):
         """

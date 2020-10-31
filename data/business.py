@@ -4,9 +4,9 @@ from sqlalchemy import or_, and_
 from hashlib import sha1
 
 class SubPackageInstruments(BasePackage):
-    def insert(self, class_name, instrument, brand, model, registry):
+    def upsert(self, class_name, instrument, brand, model, registry):
         """
-        This function inserts an instrument in the instruments table.
+        This function upserts an instrument in the instruments table.
 
         Args:
             class_name: The class of the instrument.
@@ -21,7 +21,7 @@ class SubPackageInstruments(BasePackage):
         """
         instrument_id = sha1(f'{class_name}-{instrument}-{brand}-{model}-{registry}'.encode()).hexdigest()
         
-        return self.insert_object(table=Instruments, id=instrument_id, instrument_class=class_name, instrument=instrument, brand=brand, model=model, registry=registry)
+        return self.upsert_object(table=Instruments, id=instrument_id, instrument_class=class_name, instrument=instrument, brand=brand, model=model, registry=registry)
 
     def get_by_attr(self, attr, values=[]):
         """
@@ -37,10 +37,20 @@ class SubPackageInstruments(BasePackage):
         """
         return self.get_objects_by_attr(table=Instruments, attr=attr, values=values)
 
-class SubPackageAdverts(BasePackage):
-    def insert(self, active, prices, locator, instrument):
+    def get_all_instruments(self):
         """
-        This function inserts an advert in the adverts table.
+        This function gets all the instruments in the instruments table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the instruments table.
+        """
+        return self.get_all_objects(Instruments)
+
+class SubPackageAdverts(BasePackage):
+    def upsert(self, active, prices, locator, instrument):
+        """
+        This function upserts an advert in the adverts table.
 
         Args:
             active: A boolean which tells if the ad is active.
@@ -54,9 +64,9 @@ class SubPackageAdverts(BasePackage):
         """
         advert_data_id = sha1(f'{prices}-{locator}-{instrument}'.encode()).hexdigest()
 
-        self.insert_object(table=AdvertsData, id=advert_data_id, prices=str(prices), locator=locator, instrument=instrument)
+        self.upsert_object(table=AdvertsData, id=advert_data_id, prices=str(prices), locator=locator, instrument=instrument)
 
-        return self.insert_object(table=Adverts, active=active, data=advert_data_id)
+        return self.upsert_object(table=Adverts, active=active, data=advert_data_id)
 
     def get_by_attr(self, attr, values=[]):
         """
@@ -72,10 +82,45 @@ class SubPackageAdverts(BasePackage):
         """
         return self.get_objects_by_attr(table=Adverts, attr=attr, values=values)
 
-class SubPackageLoans(BasePackage):
-    def insert(self, withdrawal, devolution, lessee, ad):
+    def get_all_adverts(self):
         """
-        This function inserts a loan in the loans table.
+        This function gets all the adverts in the adverts table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the adverts table.
+        """
+        return self.get_all_objects(Adverts)
+
+class SubPackageAdvertsData(BasePackage):
+    def get_by_attr(self, attr, values=[]):
+        """
+        This function gets all the adverts datas whose attr is in values list.
+
+        Args:
+            attr: An attribute of adverts data table.
+            values: A list with the required values for attr.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being [] if values is empty or a list with all the rows that fill any value in values.
+        """
+        return self.get_objects_by_attr(table=AdvertsData, attr=attr, values=values)
+
+    def get_all_adverts_data(self):
+        """
+        This function gets all the adverts data in the adverts data table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the adverts data table.
+        """
+        return self.get_all_objects(AdvertsData)
+
+class SubPackageLoans(BasePackage):
+    def upsert(self, withdrawal, devolution, lessee, ad):
+        """
+        This function upserts a loan in the loans table.
 
         Args:
             withdrawal: Withdrawal date.
@@ -89,7 +134,7 @@ class SubPackageLoans(BasePackage):
         """
         loan_id = sha1(f'{withdrawal}-{devolution}-{lessee}-{ad}'.encode()).hexdigest()
 
-        return self.insert_object(table=Loans, id=loan_id, withdrawal=withdrawal, devolution=devolution, lessee=lessee, ad=ad)
+        return self.upsert_object(table=Loans, id=loan_id, withdrawal=withdrawal, devolution=devolution, lessee=lessee, ad=ad)
 
     def get_by_attr(self, attr, values=[]):
         """
@@ -105,10 +150,21 @@ class SubPackageLoans(BasePackage):
         """
         return self.get_objects_by_attr(table=Loans, attr=attr, values=values)
 
+    def get_all_loans(self):
+        """
+        This function gets all the loans in the loans table.
+
+        Returns:
+            None, err: If some exception was raised querying in database, where err is an exception.
+            list, None: Otherwise, with 'list' being a list with all the rows in the loans table.
+        """
+        return self.get_all_objects(Loans)
+
 class Business:
     def __init__(self, session_scope):
         self.instruments = SubPackageInstruments(session_scope)
         self.adverts = SubPackageAdverts(session_scope)
+        self.adverts_data = SubPackageAdvertsData(session_scope)
         self.loans = SubPackageLoans(session_scope)
     
 
