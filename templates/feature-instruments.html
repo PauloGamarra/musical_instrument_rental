@@ -1,0 +1,28 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='feature-instruments.css') }}">
+
+{% if current_user.is_authenticated %}
+
+<h1>Escolha de tipos de instrumentos em destaque</h1>
+<div class="wrapper">
+    <select id="nao-selecionados" size="10" multiple="true">
+        <!-- ondblclick=""-->
+        <option value="Piano">
+            Piano
+        </option>
+        <option value="Violão">
+            Violão
+        </option>
+    </select>
+    
+    <div class="butoes">
+        <input type="button" class="butao" name=">" value=">">
+        <input type="button" class="butao" name="<" value="<">
+    </div>
+    
+    <select id="selecionados" size="10" multiple="true">
+    </select>
+</div>
+
+{% else %}
+<h1>Você não tem autorização para visualisar esta página</h1>
+{% endif %}

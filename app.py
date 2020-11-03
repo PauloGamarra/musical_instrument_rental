@@ -59,6 +59,24 @@ def logout():
     return redirect('/')
 
 
+@app.route('/destacar-instrumentos', methods=["GET", "POST"])
+@login_required
+def feature_instruments():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('feature-instruments.html')
+
+
+@app.route('/anunciar-instrumento', methods=["GET", "POST"])
+@login_required
+def announce_instruments():
+    if request.method == 'POST':
+        pass
+    else:
+        return render_template('announce-instruments.html')
+
+
 def register(form):
     auth = Auth(session_scope)
 
