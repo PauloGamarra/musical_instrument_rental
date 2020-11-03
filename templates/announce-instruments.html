@@ -1,0 +1,39 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+
+<h1>Publicar Anúncio de Aluguel de Instrumento</h1>
+
+<form action="/anunciar-instrumento" method="POST">
+
+    <div class="campo-form">
+        <label>classe do instrumento</label>
+        <input name="classe" type="text">
+    </div>
+    <div class="campo-form">
+        <label>tipo do instrumento</label>
+        <input name="tipo" type="text">
+    </div>
+    <div class="campo-form">
+        <label>instrumento</label>
+        <input name="instrumento" type="text">
+    </div>
+    <div class="campo-form">
+        <label>marca</label>
+        <input name="marca" type="text">
+    </div>
+    <div class="campo-form">
+        <label>modelo</label>
+        <input name="modelo" type="text">
+    </div>
+    <div class="campo-form">
+        <label>preço</label>
+        <input name="preco" type="text">
+    </div>
+    <div class="campo-form">
+        <label>numero de série</label>
+        <input name="numero_serie" type="text">
+    </div>
+    <div class="campo-form">
+        <button type="submit">Publicar</button>
+    </div>
+
+</form>

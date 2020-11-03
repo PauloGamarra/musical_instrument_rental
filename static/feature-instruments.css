@@ -1,0 +1,16 @@
+.wrapper {
+    width: 50%;
+}
+
+select {
+    width: 100%;
+}
+
+.butoes {
+    text-align: center;
+}
+
+.butao {
+    margin: 15px 5px 15px 5px;
+    transform: rotate(90deg);
+}
