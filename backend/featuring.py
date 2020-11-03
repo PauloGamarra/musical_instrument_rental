@@ -1,15 +1,19 @@
-from ..data.business import SubPackageInstruments
+from data.business import SubPackageInstruments
 from typing import List
 
-def saveNew10PopularIntruments(new10PopularInstruments: List[str]) -> None:
-    if len(new10PopularInstruments) != 10:
-        raise Exception('Invalid number of new popular instruments.')
+class SubPackageFeaturing():
+    def __init__(self, session_scope):
+        self.session_scope = session_scope
 
-    databaseSubsystem = SubPackageInstruments()
+    def saveNew10PopularIntruments(self, new10PopularInstruments: List[str]) -> None:
+        if len(new10PopularInstruments) != 10:
+            raise Exception('Invalid number of new popular instruments.')
 
-    allIntruments = databaseSubsystem.get_all_instruments()[0]
+        databaseSubsystem = SubPackageInstruments(self.session_scope)
 
-    if any([instrument not in map(lambda instrument: instrument.intrument, allIntruments) for instrument in new10PopularInstruments]):
-        raise Exception('Invalid new popular intrument.')
+        allIntruments = databaseSubsystem.get_all_instruments()[0]
 
-    [databaseSubsystem.upsert(instrument.class_name, instrument.instrument, instrument.brand, instrument.model, instrument.registry, instrument.instrument in new10PopularInstruments) for instrument in allIntruments]
+        if any([instrument not in map(lambda instrument: instrument.intrument, allIntruments) for instrument in new10PopularInstruments]):
+            raise Exception('Invalid new popular intrument.')
+
+        [databaseSubsystem.upsert(instrument.class_name, instrument.instrument, instrument.brand, instrument.model, instrument.registry, instrument.instrument in new10PopularInstruments) for instrument in allIntruments]

@@ -1,67 +1,71 @@
-from ..data.business import SubPackageInstruments, SubPackageAdverts
-from ..data.models import Adverts
+from data.business import SubPackageInstruments, SubPackageAdverts
+from data.models import Adverts
 from typing import List, Tuple
 
-def loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics() -> List[Tuple[str, bool]]:
-    databaseSubsystem = SubPackageInstruments()
+class SubPackageAnnouncements():
+    def __init__(self, session_scope):
+        self.session_scope = session_scope
 
-    return list(sorted(map(lambda instrument: (instrument.instrument, instrument.popular), databaseSubsystem.get_all_instruments()[0]), key=lambda instrument: (0 if instrument[1] else 1, instrument[0])))
+    def loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics(self) -> List[Tuple[str, bool]]:
+        databaseSubsystem = SubPackageInstruments(self.session_scope)
 
-def loadActiveAdvertsIdsByInstrument(instrumentType: str) -> List[str]:
-    databaseSubsystem = SubPackageAdverts()
+        return list(sorted(map(lambda instrument: (instrument.instrument, instrument.popular), databaseSubsystem.get_all_instruments()[0]), key=lambda instrument: (0 if instrument[1] else 1, instrument[0])))
 
-    return [advert.id for advert in databaseSubsystem.get_all_adverts()[0] if advert.active]
+    def loadActiveAdvertsIdsByInstrument(self, instrumentType: str) -> List[str]:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-def loadAdvertInstrumentBrandById(advertId: str) -> str:
-    databaseSubsystem = SubPackageAdverts()
+        return [advert.id for advert in databaseSubsystem.get_all_adverts()[0] if advert.active]
 
-    return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.brand
+    def loadAdvertInstrumentBrandById(self, advertId: str) -> str:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-def loadAdvertInstrumentModelById(advertId: str) -> str:
-    databaseSubsystem = SubPackageAdverts()
+        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.brand
 
-    return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.model
+    def loadAdvertInstrumentModelById(self, advertId: str) -> str:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-def loadAdvertLocatorNameById(advertId: str) -> str:
-    databaseSubsystem = SubPackageAdverts()
+        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.model
 
-    return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.locator
+    def loadAdvertLocatorNameById(self, advertId: str) -> str:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-def loadListOfPricesInBRLByDurationInDaysBrandById(advertId: str) -> List[Tuple[float, int]]:
-    databaseSubsystem = SubPackageAdverts()
+        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.locator
 
-    return list(map(lambda priceByDuration: (float(priceByDuration.split(':')[0]), int(priceByDuration.split(':')[1])),databaseSubsystem.get_by_attr(Adverts.id, [advertId]).data.prices.split(',')[0]))
+    def loadListOfPricesInBRLByDurationInDaysBrandById(self, advertId: str) -> List[Tuple[float, int]]:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-def deactivateAdvert(advertId: str) -> None:
-    databaseSubsystem = SubPackageAdverts()
+        return list(map(lambda priceByDuration: (float(priceByDuration.split(':')[0]), int(priceByDuration.split(':')[1])),databaseSubsystem.get_by_attr(Adverts.id, [advertId]).data.prices.split(',')[0]))
 
-    advert = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0]
+    def deactivateAdvert(self, advertId: str) -> None:
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-    databaseSubsystem.upsert(False, advert.prices, advert.locator, advert.instrument)
+        advert = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0]
+
+        databaseSubsystem.upsert(False, advert.prices, advert.locator, advert.instrument)
 
 
-def saveNewAdvert(listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorName: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
-    if instrumentClass.lower() not in ['cordas', 'sopro', 'percussão']:
-        raise Exception('Invalid instrument class.')
+    def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorName: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
+        if instrumentClass.lower() not in ['cordas', 'sopro', 'percussão']:
+            raise Exception('Invalid instrument class.')
 
-    if instrumentType == '':
-        raise Exception('No instrument type informed.')
+        if instrumentType == '':
+            raise Exception('No instrument type informed.')
 
-    if locatorName.split(' ') < 2 or any([not word.isalpha() for word in locatorName.split(' ')]):
-        raise Exception('No valid locator name informed.')
+        if locatorName.split(' ') < 2 or any([not word.isalpha() for word in locatorName.split(' ')]):
+            raise Exception('No valid locator name informed.')
 
-    if len(listOfPricesInBRLByDurationInDays) == 0:
-        raise Exception('No price informed.')
+        if len(listOfPricesInBRLByDurationInDays) == 0:
+            raise Exception('No price informed.')
 
-    databaseSubsystem = SubPackageInstruments()
+        databaseSubsystem = SubPackageInstruments(self.session_scope)
 
-    databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower())
+        databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower())
 
-    insertedInstrumentId = list(filter(lambda instrument: instrument.instrumentClass == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
+        insertedInstrumentId = list(filter(lambda instrument: instrument.instrumentClass == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
 
-    databaseSubsystem = SubPackageAdverts()
+        databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-    databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorName, insertedInstrumentId)
+        databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorName, insertedInstrumentId)
 
 
 
