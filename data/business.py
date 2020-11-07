@@ -4,7 +4,7 @@ from sqlalchemy import or_, and_
 from hashlib import sha1
 
 class SubPackageInstruments(BasePackage):
-    def upsert(self, class_name, instrument, brand, model, registry):
+    def upsert(self, class_name, instrument, brand, model, registry, popular):
         """
         This function upserts an instrument in the instruments table.
 
@@ -14,14 +14,15 @@ class SubPackageInstruments(BasePackage):
             brand: The brand of the instrument.
             model: The model of the instrument.
             registry: The registry code of the instrument.
+            popular: The boolean in respect to the popularity of the instrument.
 
         Returns:
             None, err: If some exception was raised querying in database, where err is an exception.
             obj, None: Otherwise, with 'obj' being the row inserted in the table.
         """
         instrument_id = sha1(f'{class_name}-{instrument}-{brand}-{model}-{registry}'.encode()).hexdigest()
-        
-        return self.upsert_object(table=Instruments, id=instrument_id, instrument_class=class_name, instrument=instrument, brand=brand, model=model, registry=registry)
+
+        return self.upsert_object(table=Instruments, id=instrument_id, instrument_class=class_name, instrument=instrument, brand=brand, model=model, registry=registry, popular=popular)
 
     def get_by_attr(self, attr, values=[]):
         """
@@ -166,12 +167,11 @@ class Business:
         self.adverts = SubPackageAdverts(session_scope)
         self.adverts_data = SubPackageAdvertsData(session_scope)
         self.loans = SubPackageLoans(session_scope)
-    
 
 
-    
 
 
-    
 
-    
+
+
+
