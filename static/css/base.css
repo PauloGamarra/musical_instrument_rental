@@ -1,0 +1,15 @@
+h1 {
+    font-size: 24px;
+}
+
+.content {
+    max-width: 360px;
+}
+
+.error {
+    color: red;
+}
+
+.campo-form {
+    width: 100%;
+}

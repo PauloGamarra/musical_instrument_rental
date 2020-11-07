@@ -1,5 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %} Sucesso! {% endblock %}
+
+{% block content %}
+
 <h1>Parabéns, você fez login</h1>
 {% if current_user.is_authenticated %}
     <p>Nome: {{ current_user.name }}</p>
     <p>E-mail: {{ current_user.email }}</p>
 {% endif %}
+
+{% endblock %}

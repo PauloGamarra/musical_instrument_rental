@@ -1,11 +1,18 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='feature-instruments.css') }}">
-<script src="{{ url_for('static', filename='feature-instruments.js') }}"></script>
+{% extends "base.html" %}
+
+{% block title %} Destacar Instrumentos {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/feature-instruments.css') }}">
+<script src="{{ url_for('static', filename='js/feature-instruments.js') }}"></script>
+{% endblock %}
+
+{% block content %}
 
 {% if current_user.is_authenticated %}
 
 <h1>Escolha de tipos de instrumentos em destaque</h1>
-<form action="/destacar-instrumentos" onsubmit="return selecionarTodos10('selecionados')" method="POST">
-    <div class="wrapper">
+<form class="content" action="/destacar-instrumentos" onsubmit="return selecionarTodos10('selecionados')" method="POST">
         <select id="nao-selecionados" size="10" multiple="true">
             {% for instrumento in instrumentos: %}
                 <option value="{{ instrumento }}"> {{ instrumento }} </option>
@@ -21,9 +28,10 @@
         </select>
     
         <button class="confirmar" type="submit">Confirmar</button>
-    </div>
 </form>
 
 {% else %}
 <h1>Você não tem autorização para visualisar esta página</h1>
 {% endif %}
+
+{% endblock %}
