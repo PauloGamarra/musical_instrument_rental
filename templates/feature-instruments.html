@@ -1,27 +1,28 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='feature-instruments.css') }}">
+<script src="{{ url_for('static', filename='feature-instruments.js') }}"></script>
 
 {% if current_user.is_authenticated %}
 
 <h1>Escolha de tipos de instrumentos em destaque</h1>
-<div class="wrapper">
-    <select id="nao-selecionados" size="10" multiple="true">
-        <!-- ondblclick=""-->
-        <option value="Piano">
-            Piano
-        </option>
-        <option value="Violão">
-            Violão
-        </option>
-    </select>
+<form action="/destacar-instrumentos" onsubmit="return selecionarTodos10('selecionados')" method="POST">
+    <div class="wrapper">
+        <select id="nao-selecionados" size="10" multiple="true">
+            {% for instrumento in instrumentos: %}
+                <option value="{{ instrumento }}"> {{ instrumento }} </option>
+            {% endfor %}
+        </select>
+        
+        <div class="butoes">
+            <input type="button" class="butao" name=">" value=">" onclick="move(true, 'nao-selecionados', 'selecionados')">
+            <input type="button" class="butao" name="<" value="<" onclick="move(false, 'selecionados', 'nao-selecionados')">
+        </div>
+        
+        <select id="selecionados" size="10"  name="selecionados" multiple="multiple">
+        </select>
     
-    <div class="butoes">
-        <input type="button" class="butao" name=">" value=">">
-        <input type="button" class="butao" name="<" value="<">
+        <button class="confirmar" type="submit">Confirmar</button>
     </div>
-    
-    <select id="selecionados" size="10" multiple="true">
-    </select>
-</div>
+</form>
 
 {% else %}
 <h1>Você não tem autorização para visualisar esta página</h1>

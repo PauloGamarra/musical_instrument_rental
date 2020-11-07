@@ -1,37 +1,54 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='base.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='announce-instruments.css') }}">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/x-icon">
+<script> var icon_path = "{{ url_for('static', filename = 'ic-trash.svg') }}";</script>
+<script src="{{ url_for('static', filename='announce-instruments.js') }}"></script>
+<title>Aluguel de Instrumentos</title>
 
 <h1>Publicar Anúncio de Aluguel de Instrumento</h1>
 
 <form action="/anunciar-instrumento" method="POST">
 
     <div class="campo-form">
-        <label>classe do instrumento</label>
+        <label>Classe do instrumento</label>
         <input name="classe" type="text">
     </div>
     <div class="campo-form">
-        <label>tipo do instrumento</label>
+        <label>Tipo do instrumento</label>
         <input name="tipo" type="text">
     </div>
     <div class="campo-form">
-        <label>instrumento</label>
-        <input name="instrumento" type="text">
-    </div>
-    <div class="campo-form">
-        <label>marca</label>
+        <label>Marca</label>
         <input name="marca" type="text">
     </div>
     <div class="campo-form">
-        <label>modelo</label>
+        <label>Modelo</label>
         <input name="modelo" type="text">
     </div>
     <div class="campo-form">
-        <label>preço</label>
-        <input name="preco" type="text">
-    </div>
-    <div class="campo-form">
-        <label>numero de série</label>
+        <label>Número de série</label>
         <input name="numero_serie" type="text">
     </div>
+
+    <select id="hidden-select" name="preco" multiple="multiple">
+    </select>
+    <div class="campo-form">
+        <label>Preço por dia</label>
+        <table id="table">
+            <tr>
+                <th>Preço</th>
+                <th>Dias</th>
+            </tr>
+            <tr id="inputsDaTable">
+                <td><input type="tel" pattern="(\d|\.)*" title="apenas números e ." id="precoInput"></td>
+                <td><input type="number" id="diasInput"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" onclick="adicionarPreco()" value="Adicionar"></td>
+            </tr>
+        </table>
+    </div>
+
     <div class="campo-form">
         <button type="submit">Publicar</button>
     </div>

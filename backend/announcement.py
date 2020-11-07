@@ -51,9 +51,6 @@ class SubPackageAnnouncements():
         if instrumentType == '':
             raise Exception('No instrument type informed.')
 
-        if locatorName.split(' ') < 2 or any([not word.isalpha() for word in locatorName.split(' ')]):
-            raise Exception('No valid locator name informed.')
-
         if len(listOfPricesInBRLByDurationInDays) == 0:
             raise Exception('No price informed.')
 
@@ -61,7 +58,8 @@ class SubPackageAnnouncements():
 
         databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower())
 
-        insertedInstrumentId = list(filter(lambda instrument: instrument.instrumentClass == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
+        insertedInstrumentId = list(filter(lambda instrument: instrument.instrument_class == instrumentClass.lower() and instrument.instrument == instrumentType.lower(
+        ) and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
 
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 

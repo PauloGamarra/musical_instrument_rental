@@ -1,5 +1,5 @@
 .wrapper {
-    width: 50%;
+    max-width: 360px;
 }
 
 select {
@@ -13,4 +13,10 @@ select {
 .butao {
     margin: 15px 5px 15px 5px;
     transform: rotate(90deg);
+}
+
+.confirmar {
+    margin-top: 15px;
+    width: 100px;
+    height: 30px;
 }

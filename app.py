@@ -2,8 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for
 from data.database import DatabaseConnector
 from data.models import Users
 from data.auth import Auth
-from flask_login import LoginManager, login_required, login_user, logout_user
+from data.business import SubPackageInstruments
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from sqlalchemy import or_
+from backend.featuring import SubPackageFeaturing
+from backend.announcement import SubPackageAnnouncements
 
 
 app = Flask(__name__)
@@ -63,16 +66,33 @@ def logout():
 @login_required
 def feature_instruments():
     if request.method == 'POST':
-        pass
+        instrumentos = request.form.getlist("selecionados")
+        sb = SubPackageFeaturing(session_scope)
+        sb.saveNew10PopularIntruments(instrumentos)
+        return redirect('/destacar-instrumentos')
     else:
-        return render_template('feature-instruments.html')
+        databaseSubsystem = SubPackageInstruments(session_scope)
+        allIntruments = set(map(lambda i: i.instrument, databaseSubsystem.get_all_instruments()[0]))
+
+        return render_template('feature-instruments.html', instrumentos=allIntruments)
 
 
 @app.route('/anunciar-instrumento', methods=["GET", "POST"])
 @login_required
 def announce_instruments():
     if request.method == 'POST':
-        pass
+        precolist = list(map(lambda x: (float(x.split(",")[0]), int(x.split(",")[1])), request.form.getlist("preco")))
+
+        sp = SubPackageAnnouncements(session_scope)
+        sp.saveNewAdvert(
+            precolist,
+            current_user.name,
+            request.form["classe"],
+            request.form["tipo"],
+            request.form["marca"],
+            request.form["modelo"],
+            request.form["numero_serie"])
+        return redirect('/anunciar-instrumento')
     else:
         return render_template('announce-instruments.html')
 
