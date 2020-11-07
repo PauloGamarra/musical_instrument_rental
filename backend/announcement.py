@@ -26,7 +26,7 @@ class SubPackageAnnouncements():
 
         return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.model
 
-    def loadAdvertLocatorNameById(self, advertId: str) -> str:
+    def loadAdvertLocatorUsernameById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
         return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.locator
@@ -44,7 +44,7 @@ class SubPackageAnnouncements():
         databaseSubsystem.upsert(False, advert.prices, advert.locator, advert.instrument)
 
 
-    def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorName: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
+    def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorUsername: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
         if instrumentClass.lower() not in ['cordas', 'sopro', 'percussão']:
             raise Exception('Invalid instrument class.')
 
@@ -63,7 +63,7 @@ class SubPackageAnnouncements():
 
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorName, insertedInstrumentId)
+        databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorUsername, insertedInstrumentId)
 
 
 
