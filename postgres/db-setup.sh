@@ -25,7 +25,8 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
         id VARCHAR PRIMARY KEY,
         name VARCHAR NOT NULL,
         email VARCHAR NOT NULL,
-        password VARCHAR NOT NULL
+        password VARCHAR NOT NULL,
+        admin BOOL NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE instruments (
@@ -41,7 +42,7 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
     CREATE TABLE adverts_data (
         id VARCHAR PRIMARY KEY,
         prices VARCHAR NOT NULL,
-        locator VARCHAR NOT NULL REFERENCES users(email),
+        locator VARCHAR NOT NULL REFERENCES users(id),
         instrument VARCHAR NOT NULL REFERENCES instruments(id)
     );
 
@@ -55,7 +56,7 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
         id VARCHAR PRIMARY KEY,
         withdrawal DATE NOT NULL,
         devolution DATE NOT NULL,
-        lessee VARCHAR NOT NULL REFERENCES users(email),
+        lessee VARCHAR NOT NULL REFERENCES users(id),
         ad VARCHAR NOT NULL REFERENCES adverts_data(id)
     );
 
