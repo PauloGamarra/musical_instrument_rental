@@ -1,5 +1,5 @@
 from data.business import SubPackageInstruments, SubPackageAdverts
-from data.models import Adverts
+from data.models import Adverts, Instruments
 from typing import List, Tuple
 
 class SubPackageAnnouncements():
@@ -19,12 +19,20 @@ class SubPackageAnnouncements():
     def loadAdvertInstrumentBrandById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.brand
+        instrumentId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument
+
+        databaseSubsystem = SubPackageInstruments(self.session_scope)
+
+        return databaseSubsystem.get_by_attr(Instruments.id, [instrumentId])[0].brand
 
     def loadAdvertInstrumentModelById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument.model
+        instrumentId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0].data.instrument
+
+        databaseSubsystem = SubPackageInstruments(self.session_scope)
+
+        return databaseSubsystem.get_by_attr(Instruments.id, [instrumentId])[0].model
 
     def loadAdvertLocatorUsernameById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
@@ -58,8 +66,7 @@ class SubPackageAnnouncements():
 
         databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower())
 
-        insertedInstrumentId = list(filter(lambda instrument: instrument.instrument_class == instrumentClass.lower() and instrument.instrument == instrumentType.lower(
-        ) and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
+        insertedInstrumentId = list(filter(lambda instrument: instrument.instrument_class == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
 
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
