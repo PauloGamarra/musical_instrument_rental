@@ -10,7 +10,7 @@ class UserAlreadyExists(RowAlreadyExists):
         super().__init__(table='Users')
 
 class Auth(BasePackage):
-    def create_user(self, name, email, password):
+    def create_user(self, name, email, password, admin=False):
         """
         This function inserts a new user in users table on database.
 
@@ -30,7 +30,7 @@ class Auth(BasePackage):
 
         try:
             with self.session_scope() as session:
-                user = Users(id=user_id, name=name, email=email, password=password)
+                user = Users(id=user_id, name=name, email=email, password=password, admin=admin)
                 session.add(user)
                 session.commit()
 
