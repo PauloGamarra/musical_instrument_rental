@@ -63,7 +63,7 @@ class SubPackageAnnouncements():
 
         databaseSubsystem = SubPackageInstruments(self.session_scope)
 
-        databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower(), False)
+        databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower(), any(list(map(lambda instrument: instrument.popular, databaseSubsystem.get_by_attr(Instruments.instrument, [instrumentType])[0]))))
 
         insertedInstrumentId = list(filter(lambda instrument: instrument.instrument_class == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
 
