@@ -25,7 +25,8 @@ psql -v ON_ERROR_STOP=1 --username "$RENTAL_POSTGRES_USER" --dbname "$RENTAL_POS
         id VARCHAR PRIMARY KEY,
         name VARCHAR NOT NULL,
         email VARCHAR NOT NULL,
-        password VARCHAR NOT NULL
+        password VARCHAR NOT NULL,
+        admin BOOL NOT NULL DEFAULT FALSE
     );
 
     CREATE TABLE instruments (
