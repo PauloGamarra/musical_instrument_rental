@@ -1,5 +1,6 @@
 from data.business import SubPackageInstruments, SubPackageAdverts, SubPackageAdvertsData
-from data.models import Instruments, Adverts, AdvertsData
+from data.models import Instruments, Adverts, AdvertsData, Users
+from data.auth import Auth
 from typing import List, Tuple
 
 class SubPackageAnnouncements():
@@ -67,7 +68,7 @@ class SubPackageAnnouncements():
 
         databaseSubsystem.upsert(False, advert.prices, advert.locator, advert.instrument)
 
-    def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorUsername: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
+    def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorEmail: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
         if instrumentClass.lower() not in ['cordas', 'sopro', 'percussão']:
             raise Exception('Invalid instrument class.')
 
@@ -83,9 +84,13 @@ class SubPackageAnnouncements():
 
         insertedInstrumentId = list(filter(lambda instrument: instrument.instrument_class == instrumentClass.lower() and instrument.instrument == instrumentType.lower() and instrument.brand == instrumentBrand.lower() and instrument.model == instrumentModel.lower() and instrument.registry == instrumentSerialCode.lower(), databaseSubsystem.get_all_instruments()[0]))[0].id
 
+        databaseSubsystem = Auth(self.session_scope)
+
+        locatorId = databaseSubsystem.get_objects_by_attr(Users.email, [locatorEmail])[0][0].id
+
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorUsername, insertedInstrumentId)
+        databaseSubsystem.upsert(True, ','.join(map(lambda priceByDuration: f"{priceByDuration[0]:.02f}:{priceByDuration[1]}", listOfPricesInBRLByDurationInDays)), locatorId, insertedInstrumentId)
 
 
 
