@@ -86,7 +86,7 @@ def announce_instruments():
         sp = SubPackageAnnouncements(session_scope)
         sp.saveNewAdvert(
             precolist,
-            current_user.name,
+            current_user.email,
             request.form["classe"],
             request.form["tipo"],
             request.form["marca"],

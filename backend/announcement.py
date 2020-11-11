@@ -86,7 +86,7 @@ class SubPackageAnnouncements():
 
         databaseSubsystem = Auth(self.session_scope)
 
-        locatorId = databaseSubsystem.get_objects_by_attr(Users.email, [locatorEmail])[0][0].id
+        locatorId = databaseSubsystem.get_user(email=locatorEmail)[0].id
 
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
