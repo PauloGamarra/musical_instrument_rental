@@ -18,6 +18,7 @@ class Auth(BasePackage):
             name: The user's name.
             email: The user's email.
             password: The user's password.
+            admin: A boolean which tells if the user is an admin.
 
         Returns:
             None, err: If some exception was raised querying in database, where err is an exception.

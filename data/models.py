@@ -11,7 +11,7 @@ class Users(UserMixin, Base):
     name = Column(String)
     email = Column(String)
     password = Column(String)
-    admin = Column(Boolean)
+    admin = Column(Boolean, default=False)
 
     def __repr__(self):
         return "<User(name='%s', email='%s', password='%s', admin='%s')>" % (self.name, self.email, self.password, self.admin)
