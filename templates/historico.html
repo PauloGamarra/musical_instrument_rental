@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %} Pagamento {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+{% endblock %}
+
+{% block content %}
+<h1>Histórico de Registros</h1>
+
+<p>Usuário: {{user}}</p>
+
+<p>Email: {{email}}</p>
+
+<h2>Locador:</h2>
+<table style= "width: 100%">
+	<tr>
+    	<th>Brand</th>
+    	<th>Model</th> 
+    	<th>Year</th>
+  	</tr>
+{%for car in list_of_cars %}
+	<tr>
+		<td>{{car["brand"]}}</td>
+		<td>{{car["model"]["1"]}}</td>
+		<td>{{car["year"]}}</td>
+	</tr>
+{%endfor%}
+</table>
+
+<h2>Locatário:</h2>
+
+{% endblock %}

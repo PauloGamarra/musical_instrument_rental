@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} Vitrine {% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/vitrine.css') }}">
+<script src="{{ url_for('static', filename='js/vitrine.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Destaques</h1>
+ 
+{%for instrument in featured_instruments%}
+<div class="destaque" onclick="instrument_type('{{instrument}}')">
+	<p>Instrumento: {{instrument}}</p>
+</div>
+{% endfor %}
+
+
+<h1>Todos os instrumentos</h1>
+{%for instrument in non_featured_instruments%}
+<div class="destaque" onclick="instrument_type('{{instrument}}')">
+	<p>Instrumento: {{instrument}}</p>
+</div>
+{% endfor %}
+
+{% endblock %}

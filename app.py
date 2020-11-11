@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_required, login_user, logout_user, c
 from sqlalchemy import or_
 from backend.featuring import SubPackageFeaturing
 from backend.announcement import SubPackageAnnouncements
-
+from backend.records import RecordsBackend
 
 app = Flask(__name__)
 app.config.update(
@@ -138,6 +138,50 @@ def login(form):
             return render_template('index.html', error_login="Senha Incorreta")
     else:
         return render_template('index.html', error_login="Usuário inexistente")
+
+@app.route("/vitrine", methods=["POST","GET"])
+def vitrine():
+    sp = SubPackageAnnouncements(session_scope)
+    featured_instruments= [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[:10]]
+    non_featured_instruments= [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[10:]]
+    return render_template('vitrine.html', featured_instruments=featured_instruments, non_featured_instruments=non_featured_instruments)
+
+@app.route("/vitrine-tipo-instrumento/<tipo_instrumento>")
+def vitrine_tipo_instrumento(tipo_instrumento):
+    sp = SubPackageAnnouncements(session_scope)
+    adverts_ids = sp.loadActiveAdvertsIdsByInstrument(tipo_instrumento)
+
+    locatorUsernames = [username for username in [sp.loadAdvertLocatorUsernameById(id) for id in adverts_ids]]
+    prices = [prices for prices in [sp.loadListOfPricesInBRLByDurationInDaysBrandById(id) for id in adverts_ids]]
+    brands = [brand for brand in [sp.loadAdvertInstrumentBrandById(id) for id in adverts_ids]]
+    models = [model for model in [sp.loadAdvertInstrumentModelById(id) for id in adverts_ids]]
+
+    adverts = zip(locatorUsernames, prices, brands, models)
+    return render_template('vitrine_tipo_instrumento.html', anuncios=adverts)
+
+
+@app.route("/locacao/<id>", methods=["POST", "GET"])
+def locacao(id):
+    if request.method == "GET":
+        return render_template("locacao.html", user="teste", email="teste@dominio.com",id=id)
+    else:
+        print(
+         request.form["retirada_instrumento"],
+         request.form["devolucao_instrumento"]
+)       
+        return redirect('/locacao/'+id)
+
+@app.route("/historico/<username>")
+def historico(username):
+    rb = RecordsBackend(session_scope)
+    records= rb.loadRecords()
+# [{'advert': {'locator': {'id': x, 'name': x, 'email': x}, 
+#             'instrument': {'instrument_class': x, 'instrument': x, 'brand': x, 'model': x, 'registry': x}}, 
+#             'loan': {'withdrawal': datetime.date(2020, 11, 30), 'devolution': datetime.date(2020, 12, 15), 
+#             'lessee': {'id': x, 'name': x, 'email': x}}, 
+#             'rating': x}]
+    print(records)
+    return render_template('historico.html')
 
 if __name__ == '__main__':
     app.run()
