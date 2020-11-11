@@ -56,7 +56,7 @@ class SubPackageAdverts(BasePackage):
         Args:
             active: A boolean which tells if the ad is active.
             prices: An dict that maps time to price.
-            locator: The locator's e-mail of the instrument.
+            locator: The locator's id.
             instrument: The id of a row in instruments table.
 
         Returns:
@@ -67,7 +67,7 @@ class SubPackageAdverts(BasePackage):
 
         self.upsert_object(table=AdvertsData, id=advert_data_id, prices=str(prices), locator=locator, instrument=instrument)
 
-        return self.upsert_object(table=Adverts, active=active, data=advert_data_id)
+        return self.upsert_object(table=Adverts, id=advert_data_id, active=active, data=advert_data_id)
 
     def get_by_attr(self, attr, values=[]):
         """
@@ -126,7 +126,7 @@ class SubPackageLoans(BasePackage):
         Args:
             withdrawal: Withdrawal date.
             devolution: Devolution date.
-            lessee: The lessee's e-mail of this loan.
+            lessee: The lessee's id.
             ad: The id of a row in adverts data table.
 
         Returns:
