@@ -4,7 +4,7 @@ from sqlalchemy import or_, and_
 from hashlib import sha1
 
 class SubPackageInstruments(BasePackage):
-    def upsert(self, class_name, instrument, brand, model, registry, popular):
+    def upsert(self, class_name, instrument, brand, model, registry, popular=False):
         """
         This function upserts an instrument in the instruments table.
 
