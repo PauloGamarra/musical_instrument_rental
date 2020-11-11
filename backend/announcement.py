@@ -1,5 +1,5 @@
-from data.business import SubPackageInstruments, SubPackageAdverts
-from data.models import Adverts, Instruments
+from data.business import SubPackageInstruments, SubPackageAdverts, SubPackageAdvertsData
+from data.models import Instruments, Adverts, AdvertsData
 from typing import List, Tuple
 
 class SubPackageAnnouncements():
@@ -19,7 +19,11 @@ class SubPackageAnnouncements():
     def loadAdvertInstrumentBrandById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        instrumentId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data.instrument
+        advertDataId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data
+
+        databaseSubsystem = SubPackageAdvertsData(self.session_scope)
+
+        instrumentId = databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].instrument
 
         databaseSubsystem = SubPackageInstruments(self.session_scope)
 
@@ -28,7 +32,11 @@ class SubPackageAnnouncements():
     def loadAdvertInstrumentModelById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        instrumentId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data.instrument
+        advertDataId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data
+
+        databaseSubsystem = SubPackageAdvertsData(self.session_scope)
+
+        instrumentId = databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].instrument
 
         databaseSubsystem = SubPackageInstruments(self.session_scope)
 
@@ -37,12 +45,20 @@ class SubPackageAnnouncements():
     def loadAdvertLocatorUsernameById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        return databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data.locator
+        advertDataId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data
+
+        databaseSubsystem = SubPackageAdvertsData(self.session_scope)
+
+        return databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].locator
 
     def loadListOfPricesInBRLByDurationInDaysBrandById(self, advertId: str) -> List[Tuple[float, int]]:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        return list(map(lambda priceByDuration: (float(priceByDuration.split(':')[0]), int(priceByDuration.split(':')[1])),databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data.prices.split(',')[0]))
+        advertDataId = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0].data
+
+        databaseSubsystem = SubPackageAdvertsData(self.session_scope)
+
+        return list(map(lambda priceByDuration: (float(priceByDuration.split(':')[0]), int(priceByDuration.split(':')[1])),databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].prices.split(',')[0]))
 
     def deactivateAdvert(self, advertId: str) -> None:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
