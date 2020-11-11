@@ -93,7 +93,7 @@ class LoansBackend():
 
         records.saveNewRecord(loan_id, rating=8)
 
-    def processLoan(self, withdrawal, devolution, lessee, ad_id, rating):
+    def processLoan(self, withdrawal, devolution, lessee, ad_id, rating=3):
         #save loan
         self.saveNewLoanByAdId(withdrawal, devolution, lessee, ad_id)
 

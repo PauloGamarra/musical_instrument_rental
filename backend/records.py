@@ -65,7 +65,13 @@ class RecordsBackend():
                  'rating':record.rating}
                 for record in recordsSubsystem.get_all_records()[0]]
 
-    def loadLocatorRecords(self, user_id):
+    def loadLocatorRecords(self, locator_email):
+        userSubsystem = Auth(self.session_scope)
+        user_id = userSubsystem.get_user(email=locator_email)[0].id
+
         return [record for record in self.loadRecords() if record['advert']['locator']['id'] == user_id]
-    def loadLesseeRecords(self, user_id):
+    def loadLesseeRecords(self, lessee_email):
+        userSubsystem = Auth(self.session_scope)
+        user_id = userSubsystem.get_user(email=lessee_email)[0].id
+
         return [record for record in self.loadRecords() if record['loan']['lessee']['id'] == user_id]
