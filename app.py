@@ -163,25 +163,26 @@ def vitrine_tipo_instrumento(tipo_instrumento):
 @app.route("/locacao/<id>", methods=["POST", "GET"])
 def locacao(id):
     if request.method == "GET":
-        return render_template("locacao.html", user="teste", email="teste@dominio.com",id=id)
+        return render_template("locacao.html", user=current_user.name, email=current_user.email,id=id)
     else:
         print(
          request.form["retirada_instrumento"],
-         request.form["devolucao_instrumento"]
+         request.form["devolucao_instrumento"],
 )       
         return redirect('/locacao/'+id)
 
 @app.route("/historico/<username>")
 def historico(username):
     rb = RecordsBackend(session_scope)
-    records= rb.loadRecords()
+    lesseRecords = rb.loadLesseRecords()
+    locatorRecords = rb.loadLocatorRecords()
 # [{'advert': {'locator': {'id': x, 'name': x, 'email': x}, 
 #             'instrument': {'instrument_class': x, 'instrument': x, 'brand': x, 'model': x, 'registry': x}}, 
 #             'loan': {'withdrawal': datetime.date(2020, 11, 30), 'devolution': datetime.date(2020, 12, 15), 
 #             'lessee': {'id': x, 'name': x, 'email': x}}, 
 #             'rating': x}]
     print(records)
-    return render_template('historico.html')
+    return render_template('historico.html', lesseRecords=lesseRecords, locatorRecords=locatorRecords)
 
 if __name__ == '__main__':
     app.run()

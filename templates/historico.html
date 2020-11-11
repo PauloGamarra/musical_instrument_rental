@@ -15,19 +15,69 @@
 <h2>Locador:</h2>
 <table style= "width: 100%">
 	<tr>
-    	<th>Brand</th>
-    	<th>Model</th> 
-    	<th>Year</th>
+    	<th>Classe</th>
+    	<th>Instrumento</th> 
+		<th>Marca</th>
+		<th>Data de Retirada</th>
+		<th>Data de Devolução</th>
+		<th>Locatário</th>
+		<th>Avaliação</th>
   	</tr>
-{%for car in list_of_cars %}
+{%for record in lesseeRecords%}
 	<tr>
-		<td>{{car["brand"]}}</td>
-		<td>{{car["model"]["1"]}}</td>
-		<td>{{car["year"]}}</td>
+		<td>{{record["instrument"]["instrument_class"]}}</td>
+		<td>{{record["instrument"]["instrument"]}}</td>
+		<td>{{record["instrument"]["brand"]}}</td>
+		<td>{{record["loan"]["withdrawal"]}}</td>
+		<td>{{record["loan"]["devolution"]}}</td>
+		<td>{{record["lessee"]["name"]}}</td>
+		<td>{{record["lessee"]["rating"]}}</td>
 	</tr>
 {%endfor%}
 </table>
 
 <h2>Locatário:</h2>
-
+<table style= "width: 100%">
+	<tr>
+    	<th>Classe</th>
+    	<th>Instrumento</th> 
+		<th>Marca</th>
+		<th>Data de Retirada</th>
+		<th>Data de Devolução</th>
+		<th>Locador</th>
+  	</tr>
+{%for record in locatorRecords%}
+	<tr>
+		<td>{{record["instrument"]["instrument_class"]}}</td>
+		<td>{{record["instrument"]["instrument"]}}</td>
+		<td>{{record["instrument"]["brand"]}}</td>
+		<td>{{record["loan"]["withdrawal"]}}</td>
+		<td>{{record["loan"]["devolution"]}}</td>
+		<td>{{record["lessee"]["name"]}}</td>
+	</tr>
+{%endfor%}
+</table>
 {% endblock %}
+
+<!-- Registro como locador:
+Dados do anuncio:
+Instrumento:
+Classe
+Instrumento
+Marca
+Emprestimo:
+data de retirada
+devolucao
+locatario(usuario)
+Avaliacao
+
+Registro como locatário:
+Dados do anuncio:
+Locador(usuario)
+Instrumento:
+Classe
+Instrumento
+Marca
+Emprestimo:
+data de retirada
+data de devolucao -->
