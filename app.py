@@ -8,6 +8,7 @@ from sqlalchemy import or_
 from backend.featuring import SubPackageFeaturing
 from backend.announcement import SubPackageAnnouncements
 from backend.records import RecordsBackend
+from backend.loan import LoansBackend
 
 app = Flask(__name__)
 app.config.update(
@@ -163,25 +164,37 @@ def vitrine_tipo_instrumento(tipo_instrumento):
 @app.route("/locacao/<id>", methods=["POST", "GET"])
 def locacao(id):
     if request.method == "GET":
-        return render_template("locacao.html", user="teste", email="teste@dominio.com",id=id)
+        lb = LoansBackend(session_scope)
+        locatorData = lb.loadLocatorData(id)
+        sp = SubPackageAnnouncements(session_scope)
+        brand = sp.loadAdvertInstrumentBrandById(id)
+        model = sp.loadAdvertInstrumentModelById(id)
+        prices = sp.loadListOfPricesInBRLByDurationInDaysBrandById(id)
+        return render_template("locacao.html", user=locatorData.name, email=locatorData.email,id=id, brand=brand, model=model, prices=prices)
     else:
-        print(
-         request.form["retirada_instrumento"],
-         request.form["devolucao_instrumento"]
-)       
-        return redirect('/locacao/'+id)
+        session['datas'] = json.dumps(request.form)
+        session["id"] = id
+        return redirect('/pagamento')
 
 @app.route("/historico/<username>")
 def historico(username):
     rb = RecordsBackend(session_scope)
-    records= rb.loadRecords()
-# [{'advert': {'locator': {'id': x, 'name': x, 'email': x}, 
-#             'instrument': {'instrument_class': x, 'instrument': x, 'brand': x, 'model': x, 'registry': x}}, 
-#             'loan': {'withdrawal': datetime.date(2020, 11, 30), 'devolution': datetime.date(2020, 12, 15), 
-#             'lessee': {'id': x, 'name': x, 'email': x}}, 
-#             'rating': x}]
+    lesseRecords = rb.loadLesseRecords()
+    locatorRecords = rb.loadLocatorRecords()
+
     print(records)
-    return render_template('historico.html')
+    return render_template('historico.html', lesseRecords=lesseRecords, locatorRecords=locatorRecords)
+
+@app.route("/pagina-pagamento", methods=["POST", "GET"])
+def pagamento():
+    lb = LoansBackend(session_scope)
+    datas = json.loads(session['datas'])
+    if request.method == "GET":
+        charge = lb.computeCharge(datas["retirada_instrumento"], datas["devolucao_instrumento"], session["id"])
+        return render_template('pagina_pagamento.html', retirada= datas["retirada_instrumento"], devolucao=datas["devolucao_instrumento"], charge=charge)
+    else:
+        lb.processLoan(datas["retirada_instrumento"], datas["devolucao_instrumento"],current_user.id,session["id"])
+        return render_template('pagamento_concluido.html')
 
 if __name__ == '__main__':
     app.run()

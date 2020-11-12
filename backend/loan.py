@@ -18,17 +18,10 @@ class LoansBackend():
 
         ad_data_id = AdvertsSubsystem.get_by_attr(Adverts.id, [ad_id])[0][0].data
         locator_id = AdvertsDataSubsystem.get_by_attr(AdvertsData.id, [ad_data_id])[0][0].locator
-        locator = UsersSubsystem.get_objects_by_attr(Users,Users.id,[locator_id])
+        locator = UsersSubsystem.get_objects_by_attr(Users, Users.id, [locator_id])[0][0]
 
         return {'name': locator.name,
                 'email': locator.email}
-
-
-    def loadUnaveiableDates(self, ad_id:str):
-        loansSubsystem = SubPackageLoans(self.session_scope)
-
-        return [(loan.withdrawal, loan.devolution) for loan in loansSubsystem.get_by_attr(Loans.ad, [ad_id])[0]]
-
 
 
     def saveNewLoan(self, withdrawal: date, devolution: date, lessee:str, ad_data_id:str):
@@ -50,13 +43,16 @@ class LoansBackend():
 
         return self.saveNewLoan(withdrawal, devolution, lessee, ad_data_id)
 
-    def computeCharge(self, withdrawal: date, devolution: date, ad_id:str):
+    def computeCharge(self, withdrawal: str, devolution: str, ad_id:str):
+
+        withdrawal = self.stringToDate(withdrawal)
+        devolution = self.stringToDate(devolution)
 
         announcements = SubPackageAnnouncements(self.session_scope)
         pricesByDuration = announcements.loadListOfPricesInBRLByDurationInDaysBrandById(ad_id)
 
         loan_duration = devolution - withdrawal
-        partial_duration = loan_duration
+        partial_duration = loan_duration.days
         charge = 0
         for price_by_duration in pricesByDuration:
             num_durations = partial_duration // price_by_duration[1]
@@ -64,14 +60,6 @@ class LoansBackend():
 
         return charge
 
-
-    def payment(self, charge: float):
-        """
-        Here the an external payment method will be called and True will be returned
-        if payment was successful, else, False
-        """
-
-        return True
 
     def deactivate_ad(self, ad_id):
         AdvertsSubsystem = SubPackageAdverts(self.session_scope)
@@ -93,7 +81,17 @@ class LoansBackend():
 
         records.saveNewRecord(loan_id, rating=8)
 
-    def processLoan(self, withdrawal, devolution, lessee, ad_id, rating):
+    def stringToDate(self, date_string):
+
+        date_elements = [int(element) for element in date_string.split('-')]
+
+        return date(date_elements[0], date_elements[1], date_elements[2])
+
+    def processLoan(self, withdrawal, devolution, lessee, ad_id, rating=3):
+
+        withdrawal = self.stringToDate(withdrawal)
+        devolution = self.stringToDate(devolution)
+
         #save loan
         self.saveNewLoanByAdId(withdrawal, devolution, lessee, ad_id)
 
@@ -102,16 +100,3 @@ class LoansBackend():
 
         #save record
         self.saveNewRecordByLoanData(withdrawal, devolution, lessee, ad_id, rating)
-
-    def makeLoan(self, withdrawal: date, devolution: date, lessee: str, ad_id:str, rating):
-
-        #compute_charge
-        charge = self.computeCharge(withdrawal, devolution, ad_id)
-
-        #request payment
-        if not self.payment(charge):
-            raise Exception("Payment was not successful")
-
-        #save new loan
-
-        return self.processLoan(withdrawal, devolution, lessee, ad_id, rating)

@@ -1,5 +1,11 @@
 from .base import BasePackage
 from .models import Records, Loans, AdvertsData
+from hashlib import sha1
+from enum import Enum
+
+class UserTypeLoan(Enum):
+    Lessee = Loans.lessee
+    Locator = AdvertsData.locator
 
 class HistoricalRecords(BasePackage):
     def upsert(self, loan, rating):
@@ -26,20 +32,23 @@ class HistoricalRecords(BasePackage):
         """
         return self.get_all_objects(Records)
 
-    def get_by_email(self, email):
+    def get_by_email(self, email, user_type=UserTypeLoan.Lessee):
         """
         This function gets all the objects whose attr is in values list.
 
         Args:
             email: An email.
+            user_type: An enum setting the user type (locator/lessee)
 
         Returns:
             None, err: If some exception was raised querying in database, where err is an exception.
             records, None: Otherwise, with 'records' being a list with all the rows that have this e-mail for its lessee.
         """
+        email = sha1(f'{email}'.encode()).hexdigest()
+
         try:
             with self.session_scope() as session:
-                records = session.query(Records, Loans, AdvertsData).filter(Loans.lessee == email).all()
+                records = session.query(Records, Loans, AdvertsData).filter(user_type == email).all()
 
             return records, None
         except Exception as err:
