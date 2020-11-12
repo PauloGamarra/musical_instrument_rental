@@ -82,6 +82,9 @@ class SubPackageAnnouncements():
         if len(listOfPricesInBRLByDurationInDays) == 0:
             raise Exception('No price informed.')
 
+        if any(lambda priceByDuration: priceByDuration[0] <= 0 or priceByDuration[1] <= 0, listOfPricesInBRLByDurationInDays):
+            raise Exception('Price or duration <= 0.')
+
         databaseSubsystem = SubPackageInstruments(self.session_scope)
 
         databaseSubsystem.upsert(instrumentClass.lower(), instrumentType.lower(), instrumentBrand.lower(), instrumentModel.lower(), instrumentSerialCode.lower(), any(list(map(lambda instrument: instrument.popular, databaseSubsystem.get_by_attr(Instruments.instrument, [instrumentType])[0]))))
