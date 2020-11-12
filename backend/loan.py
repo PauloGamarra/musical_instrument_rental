@@ -66,13 +66,9 @@ class LoansBackend():
 
 
     def deactivate_ad(self, ad_id):
-        AdvertsSubsystem = SubPackageAdverts(self.session_scope)
-        AdvertsDataSubsystem = SubPackageAdvertsData(self.session_scope)
+        ad_backend = SubPackageAnnouncements(self.session_scope)
 
-        ad = AdvertsSubsystem.get_by_attr(Adverts.id, [ad_id])[0][0]
-        ad_data = AdvertsDataSubsystem.get_by_attr(AdvertsData.id, [ad.data])[0][0]
-
-        return AdvertsSubsystem.upsert(False, ad_data.prices, ad_data.locator, ad_data.instrument)
+        ad_backend.deactivateAdvert(ad_id)
 
     def saveNewRecordByLoanData(self,withdrawal, devolution, lessee, ad_id, rating):
         loanSubsystem = SubPackageLoans(self.session_scope)
