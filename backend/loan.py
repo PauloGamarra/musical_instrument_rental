@@ -25,11 +25,11 @@ class LoansBackend():
 
 
     def saveNewLoan(self, withdrawal: date, devolution: date, lessee:str, ad_data_id:str):
-        if withdrawal < date.today():
+        if withdrawal > date.today():
             raise Exception('Invalid withdrawal date')
-        if devolution < date.today():
+        if devolution > date.today():
             raise Exception('Invalid devolution date')
-        if withdrawal > devolution:
+        if withdrawal < devolution:
             raise Exception('Invalid loan period')
 
         loansSubsystem = SubPackageLoans(self.session_scope)
@@ -44,13 +44,19 @@ class LoansBackend():
         return self.saveNewLoan(withdrawal, devolution, lessee, ad_data_id)
 
     def computeCharge(self, withdrawal: str, devolution: str, ad_id:str):
+        if withdrawal > date.today():
+            raise Exception('Invalid withdrawal date')
+        if devolution > date.today():
+            raise Exception('Invalid devolution date')
+        if withdrawal < devolution:
+            raise Exception('Invalid loan period')
 
         withdrawal = self.stringToDate(withdrawal)
         devolution = self.stringToDate(devolution)
 
         announcements = SubPackageAnnouncements(self.session_scope)
         pricesByDuration = announcements.loadListOfPricesInBRLByDurationInDaysBrandById(ad_id)
-        pricesByDuration = sorted(pricesByDuration, key=lambda x: x[1])
+        pricesByDuration = sorted(pricesByDuration, key=lambda x: x[1], reverse=True)
 
         loan_duration = devolution - withdrawal
         partial_duration = loan_duration.days
