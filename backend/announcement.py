@@ -50,7 +50,11 @@ class SubPackageAnnouncements():
 
         databaseSubsystem = SubPackageAdvertsData(self.session_scope)
 
-        return databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].locator
+        locatorId = databaseSubsystem.get_by_attr(AdvertsData.id, [advertDataId])[0][0].locator
+
+        databaseSubsystem = Auth(self.session_scope)
+
+        return databaseSubsystem.get_user(user_id=locatorId)[0].name
 
     def loadListOfPricesInBRLByDurationInDaysBrandById(self, advertId: str) -> List[Tuple[float, int]]:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
