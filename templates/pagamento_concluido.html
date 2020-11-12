@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Pagamento Concluíd{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<h1>Parabéns, seu pagamento foi concluído! =)</h1>
+<button onclick="window.location.href='/'">Voltar à página inicial</button>
+{% endblock %}

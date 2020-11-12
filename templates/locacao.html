@@ -8,27 +8,45 @@
 {% block content %}
 <form action="#" method="POST" action="/locacao/{{id}}">
 	
-	<h2>Dados do Locatário:</h2>
+	<h2>Dados do Locador:</h2>
 
 	<p>Usuário: {{user}}</p>
 	<p>Email: {{email}}</p>
 
+	<h2>Dados do Instrumento</h2>
+	<p>Marca: {{brand}}</p>
+	<p>Modelo: {{model}}</p>
+
+	<p>Preço por Dia:</p>
+	<table>
+		<tr>
+			<th>Preço</th>
+			<th>Dias</th>
+		</tr>
+		{% for price in prices%}
+		<tr>
+			<td>{{price[0]}}</td>
+			<td>{{price[1]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+
 	<!-- date format: AAAA-DD-MM -->
 	<h2>Período de Locação:</h2>
-
+	<form action="/locacao/{{id}}">
 	<label for="start"> Data de Retirada:</label>
 	<input type= "date" id="retirada" name="retirada_instrumento"
 		   value="2020-01-01" 
-		   min="2020-01-01" max="2020-12-30">
+		   min="2020-01-01" max="2021-12-30">
 	<br>
 	
 	<label for="start"> Data de Devolução:</label>
 	<input type= "date" id="devolucao" name="devolucao_instrumento"
 		   value="2020-02-01"
-		   min="2020-02-01" max="2020-12-31">
+		   min="2020-02-01" max="2021-12-31">
 	<br>
-
 	<p><button type="submit">Proceder para pagamento</button></p>
+	</form>
 
 </form>
 {% endblock %}

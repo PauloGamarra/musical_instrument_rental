@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Página de Pagamento{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<p>De: {{retirada}}</p>
+<p>Até: {{devolucao}}</p>
+
+<h1>Valor Total a ser Pago:</h1>
+<p>R$ {{charge}}</p>
+
+<form action="/pagina_pagamento">
+    <button type="submit">Pagar</button>
+</form>
+{% endblock %}
