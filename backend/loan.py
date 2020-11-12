@@ -50,6 +50,7 @@ class LoansBackend():
 
         announcements = SubPackageAnnouncements(self.session_scope)
         pricesByDuration = announcements.loadListOfPricesInBRLByDurationInDaysBrandById(ad_id)
+        pricesByDuration = sorted(pricesByDuration, key=lambda x: x[1])
 
         loan_duration = devolution - withdrawal
         partial_duration = loan_duration.days
@@ -57,6 +58,9 @@ class LoansBackend():
         for price_by_duration in pricesByDuration:
             num_durations = partial_duration // price_by_duration[1]
             charge += num_durations * price_by_duration[0]
+
+        if charge == 0:
+            charge = pricesByDuration[-1][0]
 
         return charge
 
