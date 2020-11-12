@@ -2,8 +2,9 @@ h1 {
     font-size: 24px;
 }
 
-.content {
+#content {
     max-width: 360px;
+    margin: 8px;
 }
 
 .error {
@@ -12,4 +13,100 @@ h1 {
 
 .campo-form {
     width: 100%;
+}
+
+body {
+    margin: 0;
+}
+
+.navbar {
+    position: relative;
+    height: 30px;
+    width: 100%;
+    border-bottom: 1px solid black;
+}
+
+.nome-usuario {
+    position: absolute;
+    right: 0;
+    font-size: 24px;
+    cursor: pointer;
+    height: 100%;
+    padding: 0 16px 0 16px;
+    border-left: 1px solid black;
+    user-select: none;
+}
+
+
+.nome-usuario:hover {
+    background-color: #aaaaaa;
+}
+
+#seta {
+    display: inline-block;
+    font-size: 12px;
+}
+
+#seta.clicado {
+    transform: rotate(0deg);
+    transition: all 0.2s;
+}
+
+#seta.nao-clicado {
+    transform: rotate(180deg);
+    transition: all 0.2s;
+}
+
+
+.opcao-dropdown {
+    position: absolute;
+    display: none;
+    right: 0;
+    height: 30px;
+    border: 1px solid black;
+    width: 100%;
+    font-size: 16px;
+}
+
+.opcao-wrapper {
+    position: relative;
+}
+
+.opcao-wrapper .p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 30%);
+}
+
+.opcao-dropdown.clicado {
+    display: block;
+}
+
+.opcao-dropdown:hover {
+    background-color: #aaaaaa;
+    cursor: pointer;
+    user-select: none;
+}
+
+.opcao-dropdown1 {
+    top: 31px;
+}
+
+.opcao-dropdown2 {
+    top: 62px;
+}
+
+
+table, th, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    align-content: center;
+}
+td, th {
+    padding: 0 10px 0 10px;
+}
+th {
+    white-space: nowrap;
+    background-color: #cccccc;
 }

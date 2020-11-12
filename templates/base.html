@@ -4,12 +4,30 @@
     <head>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
         <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.png') }}" type="image/x-icon">
+        <script src="{{ url_for('static', filename='js/base.js') }}"></script>
         {% block head %}
         {% endblock %}
         <title>{% block title %}{% endblock %} - Aluguel de Instrumentos</title>
     </head>
 
     <body>
+        {% if current_user.is_authenticated %}
+        <div class="navbar">
+            <div id="dropdown" class="nome-usuario" onclick="mostrarDropdown()">
+                {{ current_user.name }} <span id="seta" class="nao-clicado">▲</span>
+                <div class="opcao-dropdown opcao-dropdown1">
+                    <div class="opcao-wrapper">
+                        <div class="p" onclick="location.href='/historico/{{current_user.name}}';">Histórico</div>
+                    </div>
+                </div>
+                <div class="opcao-dropdown opcao-dropdown2" onclick="location.href='/logout';">
+                    <div class="opcao-wrapper">
+                        <div class="p">Deslogar</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
         <div id="content">{% block content %}{% endblock %}</div>
     </body>
 

@@ -8,9 +8,9 @@
 {% block content %}
 <h1>Histórico de Registros</h1>
 
-<p>Usuário: {{user}}</p>
+<p>Usuário: {{current_user.name}}</p>
 
-<p>Email: {{email}}</p>
+<p>Email: {{current_user.email}}</p>
 
 <h2>Locador:</h2>
 <table style= "width: 100%">
@@ -25,13 +25,13 @@
   	</tr>
 {%for record in lesseeRecords%}
 	<tr>
-		<td>{{record["instrument"]["instrument_class"]}}</td>
-		<td>{{record["instrument"]["instrument"]}}</td>
-		<td>{{record["instrument"]["brand"]}}</td>
+		<td>{{record["advert"]["instrument"]["instrument_class"]}}</td>
+		<td>{{record["advert"]["instrument"]["instrument"]}}</td>
+		<td>{{record["advert"]["instrument"]["brand"]}}</td>
 		<td>{{record["loan"]["withdrawal"]}}</td>
 		<td>{{record["loan"]["devolution"]}}</td>
-		<td>{{record["lessee"]["name"]}}</td>
-		<td>{{record["lessee"]["rating"]}}</td>
+		<td>{{record["loan"]["lessee"]["name"]}}</td>
+		<td>{{record["loan"]["lessee"]["rating"]}}</td>
 	</tr>
 {%endfor%}
 </table>
@@ -48,36 +48,13 @@
   	</tr>
 {%for record in locatorRecords%}
 	<tr>
-		<td>{{record["instrument"]["instrument_class"]}}</td>
-		<td>{{record["instrument"]["instrument"]}}</td>
-		<td>{{record["instrument"]["brand"]}}</td>
+		<td>{{record["advert"]["instrument"]["instrument_class"]}}</td>
+		<td>{{record["advert"]["instrument"]["instrument"]}}</td>
+		<td>{{record["advert"]["instrument"]["brand"]}}</td>
 		<td>{{record["loan"]["withdrawal"]}}</td>
 		<td>{{record["loan"]["devolution"]}}</td>
-		<td>{{record["lessee"]["name"]}}</td>
+		<td>{{record["loan"]["lessee"]["name"]}}</td>
 	</tr>
 {%endfor%}
 </table>
 {% endblock %}
-
-<!-- Registro como locador:
-Dados do anuncio:
-Instrumento:
-Classe
-Instrumento
-Marca
-Emprestimo:
-data de retirada
-devolucao
-locatario(usuario)
-Avaliacao
-
-Registro como locatário:
-Dados do anuncio:
-Locador(usuario)
-Instrumento:
-Classe
-Instrumento
-Marca
-Emprestimo:
-data de retirada
-data de devolucao -->
