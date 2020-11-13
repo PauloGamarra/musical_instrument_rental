@@ -1,1 +1,11 @@
 https://imgur.com/a/ZAo75nG
+
+Diagrama de classes: https://i.imgur.com/0oYIht8.png
+Diagramas de sequência:
+    - UC1: https://i.imgur.com/MYkHBlg.png
+    - UC2: https://i.imgur.com/2lODbgL.png
+    - UC3: https://i.imgur.com/lHSJoVN.png
+    - UC4: https://i.imgur.com/eiO17EW.png
+    - UC5: https://i.imgur.com/CBn4OVR.png
+    - UC6: https://i.imgur.com/CoUZafP.png
+    - UC7: https://i.imgur.com/oURkcrt.png
