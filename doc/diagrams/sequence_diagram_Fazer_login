@@ -1,0 +1,28 @@
+title Fazer login
+
+actor Usuário
+
+participant Flask
+participant data.Auth
+participant SQLAlchemy
+
+Usuário->Flask: POST /username=<user>&password=<password>&email=<email>
+Flask->data.Auth: get_user(email)
+data.Auth->SQLAlchemy: query(Users).filter(email)
+data.Auth<--SQLAlchemy: list<users>
+
+alt list<users> is empty
+data.Auth<--SQLAlchemy: empty list
+Flask<--data.Auth: empty list
+Usuário<--Flask: "Unknown user"
+else list<users> is not empty
+data.Auth<--SQLAlchemy: user
+Flask<--data.Auth: user
+Flask<-Flask: compare passwords
+	alt password == user.password
+	Flask<-Flask: login_user(user)
+    Usuário<--Flask: HTTP redirect to /logged
+    else password != user.password
+    Usuário<--Flask: "Wrong password"
+    end
+end

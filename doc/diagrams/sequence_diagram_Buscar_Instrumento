@@ -1,0 +1,109 @@
+title Buscar Instrumento
+
+actor Usuário
+
+participant Flask
+participant SubPackageAnnouncements
+participant SubPackageAdverts
+participant SubPackageAdvertsData
+participant Auth
+participant SQLAlchemy
+
+Usuário->Flask: GET /vitrine-tipo-instrumento/<tipo_instrumento>
+Flask->SubPackageAnnouncements: loadActiveAdvertsIdsByInstrument(tipo_instrumento)
+SubPackageAnnouncements->SubPackageAdverts: get_all_adverts()
+SubPackageAdverts->SQLAlchemy: query(Adverts).all()
+SubPackageAdverts<--SQLAlchemy: list<adverts>
+SubPackageAnnouncements<--SubPackageAdverts: list<adverts>
+SubPackageAnnouncements->SubPackageAnnouncements: Update list to only active adverts from list<adverts>
+SubPackageAnnouncements->SubPackageAnnouncements: Update list to only announcements with type equals of tipo_instrumento
+Flask<--SubPackageAnnouncements: list<adverts>
+loop advert_id in list<adverts>
+    Flask->SubPackageAnnouncements: loadAdvertLocatorUsernameById(advert_id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(advert_id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(advert_id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data)
+    SubPackageAdvertsData<--SQLAlchemy: advertData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertData
+    SubPackageAnnouncements->SubPackageAnnouncements: advertData.locator
+
+    SubPackageAnnouncements->Auth: get_user(advertData.locator)
+    Auth->SQLAlchemy: query(Users).filter(advertData.locator)
+    Auth<--SQLAlchemy: user
+    SubPackageAnnouncements<--Auth: user
+    Flask<--SubPackageAnnouncements: user
+
+
+    Flask->SubPackageAnnouncements: loadListOfPricesInBRLByDurationInDaysBrandById(advert_id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(advert_id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(advert_id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+    
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data)
+    SubPackageAdvertsData<--SQLAlchemy: advertData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertData
+    Flask<--SubPackageAnnouncements: advertData.prices
+
+
+    Flask->SubPackageAnnouncements: loadListOfPricesInBRLByDurationInDaysBrandById(advert_id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(advert_id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(advert_id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+    
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data)
+    SubPackageAdvertsData<--SQLAlchemy: advertData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertData
+    Flask<--SubPackageAnnouncements: advertData.prices
+
+
+    Flask->SubPackageAnnouncements: loadAdvertInstrumentBrandById(id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(advert_id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertsData
+    SubPackageAnnouncements->SubPackageAnnouncements: advertData.instrument
+
+    SubPackageAnnouncements->SubPackageInstruments: get_by_attr(advertData.instrument)
+    SubPackageInstruments->SQLAlchemy: query(Instruments).filter(advertData.instrument)
+    SubPackageInstruments<--SQLAlchemy: instrument
+    SubPackageAnnouncements<--SubPackageInstruments: instrument
+    Flask<--SubPackageAnnouncements: instrument.brand
+
+
+    Flask->SubPackageAnnouncements: loadAdvertInstrumentModelById(id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data.id)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data.id)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertsData
+    SubPackageAnnouncements->SubPackageAnnouncements: advertData.instrument
+
+    SubPackageAnnouncements->SubPackageInstruments: get_by_attr(advertData.instrument)
+    SubPackageInstruments->SQLAlchemy: query(Instruments).filter(advertData.instrument.id)
+    SubPackageInstruments<--SQLAlchemy: instrument
+    SubPackageAnnouncements<--SubPackageInstruments: instrument
+    Flask<--SubPackageAnnouncements: instrument.model
+end
+Usuário<--Flask: HTTP response with all the data about the adverts

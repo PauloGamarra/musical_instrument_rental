@@ -1,0 +1,95 @@
+title Alugar Instrumento
+
+actor Locatário
+
+participant Flask
+participant LoansBackend
+participant SubPackageAnnouncements
+participant Auth
+participant SubPackageAdverts
+participant SubPackageAdvertsData
+participant SubPackageInstruments
+participant SQLAlchemy
+
+alt HTTP GET
+    Locatário->Flask: GET /locacao/<id>
+    Flask->LoansBackend: loadLocatorData(id)
+    LoansBackend->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    LoansBackend<--SubPackageAdverts: advert
+    LoansBackend->LoansBackend: advert.data
+
+    LoansBackend->SubPackageAdvertsData: get_by_attr(advert.data.id)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data.id)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    LoansBackend<--SubPackageAdvertsData: advertsData
+    LoansBackend->LoansBackend: advertData.locator
+
+    LoansBackend->Auth: get_by_attr(advertData.locator)
+    Auth->SQLAlchemy: query(Users).filter(advertData.locator.id)
+    Auth<--SQLAlchemy: user
+    LoansBackend<--Auth: user
+    Flask<--LoansBackend: user.name, user.email
+
+
+    Flask->SubPackageAnnouncements: loadAdvertInstrumentBrandById(id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data.id)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data.id)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertsData
+    SubPackageAnnouncements->SubPackageAnnouncements: advertData.instrument
+
+    SubPackageAnnouncements->SubPackageInstruments: get_by_attr(advertData.instrument)
+    SubPackageInstruments->SQLAlchemy: query(Instruments).filter(advertData.instrument.id)
+    SubPackageInstruments<--SQLAlchemy: instrument
+    SubPackageAnnouncements<--SubPackageInstruments: instrument
+    Flask<--SubPackageAnnouncements: instrument.brand
+
+
+    Flask->SubPackageAnnouncements: loadAdvertInstrumentModelById(id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data.id)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data.id)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertsData
+    SubPackageAnnouncements->SubPackageAnnouncements: advertData.instrument
+
+    SubPackageAnnouncements->SubPackageInstruments: get_by_attr(advertData.instrument)
+    SubPackageInstruments->SQLAlchemy: query(Instruments).filter(advertData.instrument.id)
+    SubPackageInstruments<--SQLAlchemy: instrument
+    SubPackageAnnouncements<--SubPackageInstruments: instrument
+    Flask<--SubPackageAnnouncements: instrument.model
+
+
+    Flask->SubPackageAnnouncements: loadListOfPricesInBRLByDurationInDaysBrandById(id)
+    SubPackageAnnouncements->SubPackageAdverts: get_by_attr(id)
+    SubPackageAdverts->SQLAlchemy: query(Adverts).filter(id)
+    SubPackageAdverts<--SQLAlchemy: advert
+    SubPackageAnnouncements<--SubPackageAdverts: advert
+    SubPackageAnnouncements->SubPackageAnnouncements: advert.data
+
+    SubPackageAnnouncements->SubPackageAdvertsData: get_by_attr(advert.data.id)
+    SubPackageAdvertsData->SQLAlchemy: query(AdvertsData).filter(advert.data.id)
+    SubPackageAdvertsData<--SQLAlchemy: advertsData
+    SubPackageAnnouncements<--SubPackageAdvertsData: advertsData
+    Flask<--SubPackageAnnouncements: advertData.prices
+
+    Locatário<--Flask: HTTP response with all the data about the loan
+else HTTP POST
+    Locatário->Flask: POST /locacao/<id>
+    Flask->Flask: Set form[datas] to get all the data from the current form
+    Flask->Flask: Set form[id] = id
+    Locatário<--Flask: HTTP response with a redirect to /pagamento
+end

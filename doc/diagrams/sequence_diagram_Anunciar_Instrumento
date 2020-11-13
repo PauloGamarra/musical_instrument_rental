@@ -1,0 +1,38 @@
+title Anunciar Instrumento
+
+actor Usuário
+
+participant Flask
+participant SubPackageAnnouncements
+participant SubPackageInstruments
+participant Auth
+participant SubPackageAdverts
+participant SQLAlchemy
+
+Usuário->Flask: POST /anunciar-instrumento?preco=<precos>&classe=<classe>\n&tipo=<tipo>&marca=<marca>&modelo=<modelo>&numero_serie=<numero_serie>
+Flask->SubPackageAnnouncements: saveNewAdvert(precos, currentUser.email, classe,\n tipo, marca, modelo, numero_serie)
+SubPackageAnnouncements->SubPackageInstruments: get_by_attr(popular)
+SubPackageInstruments->SQLAlchemy: query(Instruments).filter(popular)
+SubPackageInstruments<--SQLAlchemy: list<instruments>
+SubPackageAnnouncements<--SubPackageInstruments: list<instruments>
+SubPackageAnnouncements->SubPackageAnnouncements: list<popularTypes> = list<instruments> where instrument.type is popular
+alt tipo in list<popularTypes>
+    SubPackageAnnouncements->SubPackageInstruments: upsert(classe, tipo, marca, modelo, numero_serie, true)
+else tipo not in list<popularTypes>
+    SubPackageAnnouncements->SubPackageInstruments: upsert(classe, tipo, marca, modelo, numero_serie, false)
+end
+SubPackageInstruments->SQLAlchemy: add(instrument)
+SubPackageInstruments<--SQLAlchemy: instrument
+SubPackageAnnouncements<--SubPackageInstruments: instrument
+
+SubPackageAnnouncements->Auth: get_user(currentUser.email)
+Auth->SQLAlchemy: query(Users).filter(currentUser.email)
+Auth<--SQLAlchemy: user
+SubPackageAnnouncements<--Auth: user
+
+SubPackageAnnouncements->SubPackageAdverts: upsert(true, prices, user, instrument)
+SubPackageAdverts->SQLAlchemy: add(advert)
+SubPackageAdverts<--SQLAlchemy: advert
+SubPackageAnnouncements<--SubPackageAdverts: advert
+
+Usuário<--Flask: HTTP response with new advert

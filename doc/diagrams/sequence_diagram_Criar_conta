@@ -1,0 +1,24 @@
+title Criar conta
+
+actor Usuário
+
+participant Flask
+participant data.Auth
+participant SQLAlchemy
+
+Usuário->Flask: POST /username=<user>&password=<password>&email=<email>
+Flask->data.Auth: get_user(email)
+data.Auth->SQLAlchemy: query(Users).filter(email)
+data.Auth<--SQLAlchemy: list<users>
+
+alt list<users> is not empty
+Flask<--data.Auth: user
+Usuário<--Flask: "This e-mail has already been used"
+else list<users> is empty
+Flask<--data.Auth: empty list
+Flask->data.Auth: create_user(username, email, password)
+data.Auth->SQLAlchemy: add(user)
+data.Auth<--SQLAlchemy: user
+Flask<--data.Auth: user
+Usuário<--Flask: HTTP redirect to /logged
+end

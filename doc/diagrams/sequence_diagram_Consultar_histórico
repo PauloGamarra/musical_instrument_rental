@@ -1,0 +1,21 @@
+title Consultar histórico
+
+actor Usuário
+
+participant Flask
+participant data.HistoricalRecords
+participant SQLAlchemy
+
+alt As locator
+Usuário->Flask: GET /historicalRecordsLocator
+Flask->data.HistoricalRecords: get_by_email(email)
+data.HistoricalRecords->SQLAlchemy: query(Records).filter(locator.email)
+else As lessee
+Usuário->Flask: GET /historicalRecordsLessee
+Flask->data.HistoricalRecords: get_by_email(email)
+data.HistoricalRecords->SQLAlchemy: query(Records).filter(lessee.email)
+end
+data.HistoricalRecords<--SQLAlchemy: list<records>
+Flask<--data.HistoricalRecords: list<records>
+Usuário<--Flask: HTTP response with HTML listing all the records
+

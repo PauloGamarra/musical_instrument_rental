@@ -1,0 +1,33 @@
+title Destacar Instrumentos Populares
+
+actor Usuário
+
+participant Flask
+participant SubPackageFeaturing
+participant data.business.SubPackageInstruments
+participant SubPackageAnnouncements
+participant SQLAlchemy
+
+Usuário->Flask: POST /destacar-instrumentos?selecionados=<list>
+Flask->SubPackageFeaturing: saveNew10PopularIntruments(list)
+SubPackageFeaturing->data.business.SubPackageInstruments: get_all_instruments()
+data.business.SubPackageInstruments->SQLAlchemy: query(Instruments).all()
+data.business.SubPackageInstruments<--SQLAlchemy: list<instruments>
+SubPackageFeaturing<--data.business.SubPackageInstruments: list<instruments>
+alt list is in instruments
+    loop instrument in list
+    SubPackageFeaturing->data.business.SubPackageInstruments: upsert(instrument)
+    data.business.SubPackageInstruments->SQLAlchemy: add(instrument)
+    data.business.SubPackageInstruments<--SQLAlchemy: instrument
+    end
+    Flask<--SubPackageFeaturing: list<instruments>
+    Flask->Flask: HTTP redirects to GET /destacar-instrumentos
+    Flask->data.business.SubPackageInstruments: get_all_instruments()
+    data.business.SubPackageInstruments->SQLAlchemy: query(Instruments).all()
+    data.business.SubPackageInstruments<--SQLAlchemy: list<instruments>
+    Flask<--data.business.SubPackageInstruments: list<instruments>
+    Usuário<--Flask: HTTP response with all the instruments including popular
+else 
+    Flask<--SubPackageFeaturing: Exception()
+    Usuário<--Flask: "Invalid new popular intrument."
+end
