@@ -17,13 +17,17 @@ h1 {
 
 body {
     margin: 0;
+    background-color: #eee;
 }
 
 .navbar {
+    background-color: white;
     position: relative;
     height: 30px;
     width: 100%;
     border-bottom: 1px solid black;
+    display: flex;
+    flex-flow: row nowrap;
 }
 
 .nome-usuario {
@@ -59,12 +63,13 @@ body {
 
 
 .opcao-dropdown {
+    background-color: white;
     position: absolute;
     display: none;
     right: 0;
     height: 30px;
     border: 1px solid black;
-    width: 100%;
+    width: calc(100% - 1px);
     font-size: 16px;
 }
 
@@ -109,4 +114,36 @@ td, th {
 th {
     white-space: nowrap;
     background-color: #cccccc;
+}
+
+.vitrine-anuncio {
+    background-color: #ddd;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 1px 1px 0 0px black;
+    padding: 10px 0 10px 10px;
+    margin: 10px 0 10px 0;
+    text-transform: capitalize;
+    cursor: pointer;
+    user-select: none;
+}
+
+.vitrine-anuncio:hover {
+    box-shadow: 2px 2px 1px 0px #333;
+}
+
+.vitrine-anuncio.destaque {
+    background-color: white;
+}
+
+.botao-navbar {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 16px 0 16px;
+    border-right: 1px solid black;
+    user-select: none;
+}
+
+.botao-navbar:hover {
+    background-color: #aaaaaa;
 }

@@ -10,7 +10,7 @@ class SubPackageAnnouncements():
     def loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics(self) -> List[Tuple[str, bool]]:
         databaseSubsystem = SubPackageInstruments(self.session_scope)
 
-        return list(sorted(map(lambda instrument: (instrument.instrument, instrument.popular), databaseSubsystem.get_all_instruments()[0]), key=lambda instrument: (0 if instrument[1] else 1, instrument[0])))
+        return list(sorted(set(map(lambda instrument: (instrument.instrument, instrument.popular), databaseSubsystem.get_all_instruments()[0])), key=lambda instrument: (0 if instrument[1] else 1, instrument[0])))
 
     def loadActiveAdvertsIdsByInstrument(self, instrumentType: str) -> List[str]:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
@@ -82,7 +82,7 @@ class SubPackageAnnouncements():
         if len(listOfPricesInBRLByDurationInDays) == 0:
             raise Exception('No price informed.')
 
-        if any(lambda priceByDuration: priceByDuration[0] <= 0 or priceByDuration[1] <= 0, listOfPricesInBRLByDurationInDays):
+        if any([priceByDuration[0] <= 0 or priceByDuration[1] <= 0 for priceByDuration in listOfPricesInBRLByDurationInDays]):
             raise Exception('Price or duration <= 0.')
 
         databaseSubsystem = SubPackageInstruments(self.session_scope)

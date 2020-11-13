@@ -13,6 +13,17 @@
     <body>
         {% if current_user.is_authenticated %}
         <div class="navbar">
+            <div class="botao-navbar" onclick="location.href='/';">
+                HOME
+            </div>
+            <div class="botao-navbar" onclick="location.href='/anunciar-instrumento';">
+                Anunciar
+            </div>
+            {% if current_user.is_authenticated %}
+            <div class="botao-navbar" onclick="location.href='/destacar-instrumentos';">
+                Editar Destaques
+            </div>
+            {% endif %}
             <div id="dropdown" class="nome-usuario" onclick="mostrarDropdown()">
                 {{ current_user.name }} <span id="seta" class="nao-clicado">▲</span>
                 <div class="opcao-dropdown opcao-dropdown1">

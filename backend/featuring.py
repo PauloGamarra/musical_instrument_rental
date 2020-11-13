@@ -13,7 +13,7 @@ class SubPackageFeaturing():
 
         allIntruments = databaseSubsystem.get_all_instruments()[0]
 
-        if any([instrument not in list(map(lambda instrument: instrument.intrument, allIntruments)) for instrument in new10PopularInstruments]):
+        if any([instrument not in list(map(lambda instrument: instrument.instrument, allIntruments)) for instrument in new10PopularInstruments]):
             raise Exception('Invalid new popular intrument.')
 
         [databaseSubsystem.upsert(instrument.instrument_class, instrument.instrument, instrument.brand, instrument.model, instrument.registry, instrument.instrument in new10PopularInstruments) for instrument in allIntruments]

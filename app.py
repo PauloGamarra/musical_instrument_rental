@@ -51,8 +51,8 @@ def index():
             return render_template('index.html')
         else:
             sp = SubPackageAnnouncements(session_scope)
-            featured_instruments= [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[:10]]
-            non_featured_instruments= [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[10:]]
+            featured_instruments = [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[:10]]
+            non_featured_instruments = [instrument[0] for instrument in sp.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[10:]]
             return render_template('vitrine.html', featured_instruments=featured_instruments, non_featured_instruments=non_featured_instruments)
 
 
@@ -79,10 +79,12 @@ def feature_instruments():
         sb.saveNew10PopularIntruments(instrumentos)
         return redirect('/destacar-instrumentos')
     else:
-        databaseSubsystem = SubPackageInstruments(session_scope)
-        allIntruments = set(map(lambda i: i.instrument, databaseSubsystem.get_all_instruments()[0]))
+        backend_instruments = SubPackageInstruments(session_scope)
+        backend_announcements = SubPackageAnnouncements(session_scope)
+        destaques = [instrument[0] for instrument in backend_announcements.loadInstrumentsAndItsPopularitySortedByPopularityAndByAlphabetics()[:10]]
+        notPopularInstruments = [instrument for instrument in set(map(lambda i: i.instrument, backend_instruments.get_all_instruments()[0])) if instrument not in destaques]
 
-        return render_template('feature-instruments.html', instrumentos=allIntruments)
+        return render_template('feature-instruments.html', instrumentos=notPopularInstruments, destaques=destaques)
 
 
 @app.route('/anunciar-instrumento', methods=["GET", "POST"])
