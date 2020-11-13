@@ -15,7 +15,9 @@ class SubPackageAnnouncements():
     def loadActiveAdvertsIdsByInstrument(self, instrumentType: str) -> List[str]:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
 
-        return [advert.id for advert in databaseSubsystem.get_all_adverts()[0] if advert.active]
+        allAdverts = databaseSubsystem.get_all_adverts()[0]
+
+        return [advert.id for advert in allAdverts if advert.active and SubPackageInstruments(self.session_scope).get_by_attr(Instruments.id, [SubPackageAdvertsData(self.session_scope).get_by_attr(AdvertsData.id, [advert.data])[0][0].instrument])[0][0].instrument == instrumentType]
 
     def loadAdvertInstrumentBrandById(self, advertId: str) -> str:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
