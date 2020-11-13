@@ -11,24 +11,35 @@
 
 {% if current_user.is_authenticated %}
 
-<h1>Escolha de tipos de instrumentos em destaque</h1>
-<form class="content" action="/destacar-instrumentos" onsubmit="return selecionarTodos10('selecionados')" method="POST">
-        <select id="nao-selecionados" size="10" multiple="true">
-            {% for instrumento in instrumentos: %}
-                <option value="{{ instrumento }}"> {{ instrumento }} </option>
-            {% endfor %}
-        </select>
+    {% if current_user.admin %}
+
+    <h1>Escolha de tipos de instrumentos em destaque</h1>
+    <form class="content" action="/destacar-instrumentos" onsubmit="return selecionarTodos10('selecionados')" method="POST">
+            <select id="nao-selecionados" size="10" multiple="true">
+                {% for instrumento in instrumentos: %}
+                    <option value="{{ instrumento }}"> {{ instrumento }} </option>
+                {% endfor %}
+            </select>
+            
+            <div class="butoes">
+                <input type="button" class="butao" name=">" value=">" onclick="move(true, 'nao-selecionados', 'selecionados')">
+                <input type="button" class="butao" name="<" value="<" onclick="move(false, 'selecionados', 'nao-selecionados')">
+            </div>
+            
+            <select id="selecionados" size="10"  name="selecionados" multiple="multiple">
+                {% for instrumento in destaques: %}
+                    <option value="{{ instrumento }}"> {{ instrumento }} </option>
+                {% endfor %}
+            </select>
         
-        <div class="butoes">
-            <input type="button" class="butao" name=">" value=">" onclick="move(true, 'nao-selecionados', 'selecionados')">
-            <input type="button" class="butao" name="<" value="<" onclick="move(false, 'selecionados', 'nao-selecionados')">
-        </div>
-        
-        <select id="selecionados" size="10"  name="selecionados" multiple="multiple">
-        </select>
-    
-        <button class="confirmar" type="submit">Confirmar</button>
-</form>
+            <button class="confirmar" type="submit">Destacar</button>
+    </form>
+
+    {% else %}
+
+    <h1>Você não é permitido aqui. Vaza.</h1>
+
+    {% endif %}
 
 {% else %}
 <h1>Você não tem autorização para visualisar esta página</h1>

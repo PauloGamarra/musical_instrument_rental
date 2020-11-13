@@ -2,8 +2,9 @@ h1 {
     font-size: 24px;
 }
 
-.content {
+#content {
     max-width: 360px;
+    margin: 8px;
 }
 
 .error {
@@ -12,4 +13,137 @@ h1 {
 
 .campo-form {
     width: 100%;
+}
+
+body {
+    margin: 0;
+    background-color: #eee;
+}
+
+.navbar {
+    background-color: white;
+    position: relative;
+    height: 30px;
+    width: 100%;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.nome-usuario {
+    position: absolute;
+    right: 0;
+    font-size: 24px;
+    cursor: pointer;
+    height: 100%;
+    padding: 0 16px 0 16px;
+    border-left: 1px solid black;
+    user-select: none;
+}
+
+
+.nome-usuario:hover {
+    background-color: #aaaaaa;
+}
+
+#seta {
+    display: inline-block;
+    font-size: 12px;
+}
+
+#seta.clicado {
+    transform: rotate(0deg);
+    transition: all 0.2s;
+}
+
+#seta.nao-clicado {
+    transform: rotate(180deg);
+    transition: all 0.2s;
+}
+
+
+.opcao-dropdown {
+    background-color: white;
+    position: absolute;
+    display: none;
+    right: 0;
+    height: 30px;
+    border: 1px solid black;
+    width: calc(100% - 1px);
+    font-size: 16px;
+}
+
+.opcao-wrapper {
+    position: relative;
+}
+
+.opcao-wrapper .p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 30%);
+}
+
+.opcao-dropdown.clicado {
+    display: block;
+}
+
+.opcao-dropdown:hover {
+    background-color: #aaaaaa;
+    cursor: pointer;
+    user-select: none;
+}
+
+.opcao-dropdown1 {
+    top: 31px;
+}
+
+.opcao-dropdown2 {
+    top: 62px;
+}
+
+
+table, th, tr, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    align-content: center;
+}
+td, th {
+    padding: 0 10px 0 10px;
+}
+th {
+    white-space: nowrap;
+    background-color: #cccccc;
+}
+
+.vitrine-anuncio {
+    background-color: #ddd;
+    border: 1px solid #333;
+    border-radius: 8px;
+    box-shadow: 1px 1px 0 0px black;
+    padding: 10px 0 10px 10px;
+    margin: 10px 0 10px 0;
+    text-transform: capitalize;
+    cursor: pointer;
+    user-select: none;
+}
+
+.vitrine-anuncio:hover {
+    box-shadow: 2px 2px 1px 0px #333;
+}
+
+.vitrine-anuncio.destaque {
+    background-color: white;
+}
+
+.botao-navbar {
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0 16px 0 16px;
+    border-right: 1px solid black;
+    user-select: none;
+}
+
+.botao-navbar:hover {
+    background-color: #aaaaaa;
 }

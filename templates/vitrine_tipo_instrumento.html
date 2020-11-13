@@ -13,11 +13,21 @@
 <div class="anuncio" >
 	<p>Usuário: {{anuncio[0]}}</p>
 	<p>Preços: </p>
-	{%for preco in anuncio[1]%}
-		{{preco[0]}} {{preco[1]}}
-	{% endfor %}
+	<table>
+		<tr>
+			<th>Preço</th>
+			<th>Dias</th>
+		</tr>
+		{%for preco in anuncio[1]%}
+		<tr>
+			<td>{{preco[0]}}</td>
+			<td>{{preco[1]}}</td>
+		</tr>
+		{% endfor %}
+	</table>
 	<p>Marca: {{anuncio[2]}}</p>
 	<p>Modelo: {{anuncio[3]}}</p>
+	<button onclick="window.location.href='/locacao/{{anuncio[4]}}'">Alugar</button>
 </div>
 {% endfor %}
 
