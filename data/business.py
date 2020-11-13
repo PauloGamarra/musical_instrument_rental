@@ -2,7 +2,7 @@ from .base import BasePackage
 from .models import Instruments, Records, Loans, AdvertsData, Adverts
 from sqlalchemy import or_, and_
 from hashlib import sha1
-from typing import Tuple, List, Dict, Optional
+from typing import Tuple, List, Dict, Callable, Optional
 from datetime import date
 
 class SubPackageInstruments(BasePackage):
@@ -164,7 +164,7 @@ class SubPackageLoans(BasePackage):
         return self.get_all_objects(Loans)
 
 class Business:
-    def __init__(self, session_scope):
+    def __init__(self, session_scope: Callable):
         self.instruments: SubPackageInstruments = SubPackageInstruments(session_scope)
         self.adverts: SubPackageAdverts = SubPackageAdverts(session_scope)
         self.adverts_data: SubPackageAdvertsData = SubPackageAdvertsData(session_scope)
