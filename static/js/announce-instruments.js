@@ -5,6 +5,10 @@ function adicionarPreco() {
     var money = document.getElementById("precoInput").value;
     var days = document.getElementById("diasInput").value;
 
+    if (money == "" || days == "" || parseFloat(money) <= 0 || parseInt(days) <= 0) {
+        return;
+    }
+
     // adiciona option na select
     var hiddenSelect = document.getElementById("hidden-select");
     var newOption = document.createElement("option");
@@ -50,4 +54,14 @@ function deletarPreco(el) {
     var option = document.getElementById("hiddenSelect" + id);
     tr.parentNode.removeChild(tr);
     option.parentNode.removeChild(option);
+}
+
+function validarForm() {
+    hiddenSelect = document.getElementById("hidden-select");
+    if (hiddenSelect.childElementCount === 0) {
+        alert("Você deve adicionar pelo menos um preço à lista de preços por dias");
+        return false;
+    }
+    
+    return true;
 }

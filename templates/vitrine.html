@@ -10,7 +10,7 @@
 <h1>Destaques</h1>
  
 {%for instrument in featured_instruments%}
-<div class="vitrine-anuncio destaque" onclick="instrument_type('{{instrument}}')">
+<div class="vitrine-tipoinstrumento destaque" onclick="instrument_type('{{instrument}}')">
 	{{instrument}}
 </div>
 {% endfor %}
@@ -18,7 +18,7 @@
 
 <h1>Todos os instrumentos</h1>
 {%for instrument in non_featured_instruments%}
-<div class="vitrine-anuncio" onclick="instrument_type('{{instrument}}')">
+<div class="vitrine-tipoinstrumento" onclick="instrument_type('{{instrument}}')">
 	{{instrument}}
 </div>
 {% endfor %}

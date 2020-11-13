@@ -10,15 +10,15 @@
 
 {% block content %}
 <h1>Publicar Anúncio de Aluguel de Instrumento</h1>
-<form class="content" action="/anunciar-instrumento" method="POST">
+<form class="content" action="/anunciar-instrumento" method="POST" onsubmit="return validarForm()">
 
     <div class="campo-form">
-        <label>Classe do instrumento</label>
-        <input name="classe" type="text">
+        <label>Classe do instrumento <span class="asterisco">*</span></label>
+        <input name="classe" type="text" required>
     </div>
     <div class="campo-form">
-        <label>Tipo do instrumento</label>
-        <input name="tipo" type="text">
+        <label>Tipo do instrumento <span class="asterisco">*</span></label>
+        <input name="tipo" type="text" required>
     </div>
     <div class="campo-form">
         <label>Marca</label>
@@ -36,7 +36,7 @@
     <select id="hidden-select" name="preco" multiple="multiple">
     </select>
     <div class="campo-form">
-        <label>Preço por dia</label>
+        <label>Preço por dia <span class="asterisco">*</span></label>
         <table id="table">
             <tr>
                 <th>Preço</th>
@@ -51,6 +51,8 @@
             </tr>
         </table>
     </div>
+
+    <div class="asterisco">*: campos obrigatórios</div>
 
     <div class="campo-form">
         <button type="submit">Publicar</button>

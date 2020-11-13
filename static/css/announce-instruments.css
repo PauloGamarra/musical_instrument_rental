@@ -12,6 +12,7 @@
 
 table {
     width: 100%;
+    margin-top: 10px;
 }
 
 #precoInput, #diasInput {
@@ -22,6 +23,7 @@ table {
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
+  padding: 0;
 }
 
 td {
@@ -38,4 +40,13 @@ td {
     margin-right: 2px;
     margin-top: 2px;
     cursor: pointer;
+}
+
+.asterisco {
+    color: red;
+    font-size: 14px;
+}
+
+div.asterisco {
+    margin-top: 15px;
 }

@@ -116,7 +116,7 @@ th {
     background-color: #cccccc;
 }
 
-.vitrine-anuncio {
+.vitrine-tipoinstrumento {
     background-color: #ddd;
     border: 1px solid #333;
     border-radius: 8px;
@@ -128,11 +128,11 @@ th {
     user-select: none;
 }
 
-.vitrine-anuncio:hover {
+.vitrine-tipoinstrumento:hover {
     box-shadow: 2px 2px 1px 0px #333;
 }
 
-.vitrine-anuncio.destaque {
+.vitrine-tipoinstrumento.destaque {
     background-color: white;
 }
 
@@ -146,4 +146,36 @@ th {
 
 .botao-navbar:hover {
     background-color: #aaaaaa;
+}
+
+.vitrine-anuncio {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+}
+
+.label {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.label+.label, table+.label {
+    margin-top: 5px;
+}
+
+.tabelosa {
+    margin-top: 3px;
+}
+
+.valor {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.le-butao {
+    margin: 15px 5px 5px 5px;
+    width: calc(100% - 10px);
+    height: 35px;
+    padding: 0px;
 }

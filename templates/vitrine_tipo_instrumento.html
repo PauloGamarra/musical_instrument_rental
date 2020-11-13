@@ -10,10 +10,11 @@
 <h1>Anúncios</h1>
  
 {%for anuncio in anuncios%}
-<div class="anuncio" >
-	<p>Usuário: {{anuncio[0]}}</p>
-	<p>Preços: </p>
-	<table>
+<div class="vitrine-anuncio">
+	<div class="label">Usuário: <span class="valor">{{anuncio[0]}}</span> </div>
+
+	<div class="label">Preços: </div>
+	<table class="tabelosa">
 		<tr>
 			<th>Preço</th>
 			<th>Dias</th>
@@ -25,9 +26,11 @@
 		</tr>
 		{% endfor %}
 	</table>
-	<p>Marca: {{anuncio[2]}}</p>
-	<p>Modelo: {{anuncio[3]}}</p>
-	<button onclick="window.location.href='/locacao/{{anuncio[4]}}'">Alugar</button>
+	<div class="label">Marca: <span class="valor">{{anuncio[2]}}</span> </div>
+
+	<div class="label">Modelo: <span class="valor">{{anuncio[3]}}</span> </div>
+
+	<button class="vitrine-tipoinstrumento le-butao" onclick="window.location.href='/locacao/{{anuncio[4]}}'">Alugar</button>
 </div>
 {% endfor %}
 
