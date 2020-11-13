@@ -2,13 +2,14 @@ from .base import BasePackage
 from .models import Records, Loans, AdvertsData
 from hashlib import sha1
 from enum import Enum
+from typing import Tuple, List, Optional
 
 class UserTypeLoan(Enum):
     Lessee = Loans.lessee
     Locator = AdvertsData.locator
 
 class HistoricalRecords(BasePackage):
-    def upsert(self, loan, rating):
+    def upsert(self, loan: str, rating: int) -> Tuple[Optional[Records], Optional[Exception]]:
         """
         This function upserts an historical record in the records table.
 
@@ -22,7 +23,7 @@ class HistoricalRecords(BasePackage):
         """
         return self.upsert_object(table=Records, loan=loan, rating=rating)
 
-    def get_all_records(self):
+    def get_all_records(self) -> Tuple[Optional[List[Records]], Optional[Exception]]:
         """
         This function gets all the records in the records table.
 
@@ -32,7 +33,7 @@ class HistoricalRecords(BasePackage):
         """
         return self.get_all_objects(Records)
 
-    def get_by_email(self, email, user_type=UserTypeLoan.Lessee):
+    def get_by_email(self, email: str, user_type: UserTypeLoan = UserTypeLoan.Lessee) -> Tuple[Optional[List[Records]], Optional[Exception]]:
         """
         This function gets all the objects whose attr is in values list.
 

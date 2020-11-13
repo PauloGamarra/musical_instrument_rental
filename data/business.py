@@ -2,9 +2,11 @@ from .base import BasePackage
 from .models import Instruments, Records, Loans, AdvertsData, Adverts
 from sqlalchemy import or_, and_
 from hashlib import sha1
+from typing import Tuple, List, Dict, Optional
+from datetime import date
 
 class SubPackageInstruments(BasePackage):
-    def upsert(self, class_name, instrument, brand, model, registry, popular=False):
+    def upsert(self, class_name: str, instrument: str, brand: str, model: str, registry: str, popular: bool = False) -> Tuple[Optional[Instruments], Optional[Exception]]:
         """
         This function upserts an instrument in the instruments table.
 
@@ -24,7 +26,7 @@ class SubPackageInstruments(BasePackage):
 
         return self.upsert_object(table=Instruments, id=instrument_id, instrument_class=class_name, instrument=instrument, brand=brand, model=model, registry=registry, popular=popular)
 
-    def get_by_attr(self, attr, values=[]):
+    def get_by_attr(self, attr: object, values: List[object] = list()) -> Tuple[Optional[Instruments], Optional[Exception]]:
         """
         This function gets all the instruments whose attr is in values list.
 
@@ -38,7 +40,7 @@ class SubPackageInstruments(BasePackage):
         """
         return self.get_objects_by_attr(table=Instruments, attr=attr, values=values)
 
-    def get_all_instruments(self):
+    def get_all_instruments(self) -> Tuple[Optional[Instruments], Optional[Exception]]:
         """
         This function gets all the instruments in the instruments table.
 
@@ -49,13 +51,13 @@ class SubPackageInstruments(BasePackage):
         return self.get_all_objects(Instruments)
 
 class SubPackageAdverts(BasePackage):
-    def upsert(self, active, prices, locator, instrument):
+    def upsert(self, active: bool, prices: str, locator: str, instrument: str) -> Tuple[Optional[Adverts], Optional[Exception]]:
         """
         This function upserts an advert in the adverts table.
 
         Args:
             active: A boolean which tells if the ad is active.
-            prices: An dict that maps time to price.
+            prices: A str that maps time to price.
             locator: The locator's id.
             instrument: The id of a row in instruments table.
 
@@ -65,11 +67,11 @@ class SubPackageAdverts(BasePackage):
         """
         advert_data_id = sha1(f'{prices}-{locator}-{instrument}'.encode()).hexdigest()
 
-        self.upsert_object(table=AdvertsData, id=advert_data_id, prices=str(prices), locator=locator, instrument=instrument)
+        self.upsert_object(table=AdvertsData, id=advert_data_id, prices=prices, locator=locator, instrument=instrument)
 
         return self.upsert_object(table=Adverts, id=advert_data_id, active=active, data=advert_data_id)
 
-    def get_by_attr(self, attr, values=[]):
+    def get_by_attr(self, attr: object, values: List[object] = list()) -> Tuple[Optional[List[Adverts]], Optional[Exception]]:
         """
         This function gets all the adverts whose attr is in values list.
 
@@ -83,7 +85,7 @@ class SubPackageAdverts(BasePackage):
         """
         return self.get_objects_by_attr(table=Adverts, attr=attr, values=values)
 
-    def get_all_adverts(self):
+    def get_all_adverts(self) -> Tuple[Optional[Adverts], Optional[Exception]]:
         """
         This function gets all the adverts in the adverts table.
 
@@ -94,7 +96,7 @@ class SubPackageAdverts(BasePackage):
         return self.get_all_objects(Adverts)
 
 class SubPackageAdvertsData(BasePackage):
-    def get_by_attr(self, attr, values=[]):
+    def get_by_attr(self, attr: object, values: List[object] = list()) -> Tuple[Optional[AdvertsData], Optional[Exception]]:
         """
         This function gets all the adverts datas whose attr is in values list.
 
@@ -108,7 +110,7 @@ class SubPackageAdvertsData(BasePackage):
         """
         return self.get_objects_by_attr(table=AdvertsData, attr=attr, values=values)
 
-    def get_all_adverts_data(self):
+    def get_all_adverts_data(self) -> Tuple[Optional[List[AdvertsData]], Optional[Exception]]:
         """
         This function gets all the adverts data in the adverts data table.
 
@@ -119,7 +121,7 @@ class SubPackageAdvertsData(BasePackage):
         return self.get_all_objects(AdvertsData)
 
 class SubPackageLoans(BasePackage):
-    def upsert(self, withdrawal, devolution, lessee, ad):
+    def upsert(self, withdrawal: date, devolution: date, lessee: str, ad: str) -> Tuple[Optional[Loans], Optional[Exception]]:
         """
         This function upserts a loan in the loans table.
 
@@ -137,7 +139,7 @@ class SubPackageLoans(BasePackage):
 
         return self.upsert_object(table=Loans, id=loan_id, withdrawal=withdrawal, devolution=devolution, lessee=lessee, ad=ad)
 
-    def get_by_attr(self, attr, values=[]):
+    def get_by_attr(self, attr: object, values: List[object] = list()):
         """
         This function gets all the loans whose attr is in values list.
 
@@ -151,7 +153,7 @@ class SubPackageLoans(BasePackage):
         """
         return self.get_objects_by_attr(table=Loans, attr=attr, values=values)
 
-    def get_all_loans(self):
+    def get_all_loans(self) -> Tuple[Optional[List[Loans]], Optional[Exception]]:
         """
         This function gets all the loans in the loans table.
 
@@ -163,10 +165,10 @@ class SubPackageLoans(BasePackage):
 
 class Business:
     def __init__(self, session_scope):
-        self.instruments = SubPackageInstruments(session_scope)
-        self.adverts = SubPackageAdverts(session_scope)
-        self.adverts_data = SubPackageAdvertsData(session_scope)
-        self.loans = SubPackageLoans(session_scope)
+        self.instruments: SubPackageInstruments = SubPackageInstruments(session_scope)
+        self.adverts: SubPackageAdverts = SubPackageAdverts(session_scope)
+        self.adverts_data: SubPackageAdvertsData = SubPackageAdvertsData(session_scope)
+        self.loans: SubPackageLoans = SubPackageLoans(session_scope)
 
 
 

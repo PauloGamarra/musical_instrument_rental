@@ -4,13 +4,14 @@ from sqlalchemy import or_
 from sqlalchemy.exc import IntegrityError
 from psycopg2.errors import UniqueViolation
 from hashlib import sha1
+from typing import Tuple, List, Optional
 
 class UserAlreadyExists(RowAlreadyExists):
     def __init__(self):
         super().__init__(table='Users')
 
 class Auth(BasePackage):
-    def create_user(self, name, email, password, admin=False):
+    def create_user(self, name: str, email: str, password: str, admin: bool = False) -> Tuple[Optional[Users], Optional[Exception]]:
         """
         This function inserts a new user in users table on database.
 
@@ -47,7 +48,7 @@ class Auth(BasePackage):
 
             return None, err
 
-    def get_user(self, name = None, email = None, user_id = None):
+    def get_user(self, name: str = None, email: str = None, user_id: str = None) -> Tuple[Optional[Users], Optional[Exception]]:
         """
         This function gets an user from users table on database.
 
@@ -74,7 +75,7 @@ class Auth(BasePackage):
 
                 return None, err
 
-    def get_all_users(self):
+    def get_all_users(self) -> Tuple[Optional[List[Users]], Optional[Exception]]:
         """
         This function gets all the users in the users table.
 
@@ -84,7 +85,7 @@ class Auth(BasePackage):
         """
         return self.get_all_objects(Users)
 
-    def check_password(self, user, password):
+    def check_password(self, user: str, password: str) -> Tuple[Optional[bool], Optional[Exception]]:
         """
         This function checks if the password is correct according to the user.
 

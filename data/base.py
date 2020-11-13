@@ -1,10 +1,13 @@
+from models import Base
+from typing import Tuple, List, Optional, Callable
+
 class BadRequestForQuery(Exception):
-    def __init__(self, table, necessary_args):
+    def __init__(self, table: Base, necessary_args: List[object]):
         message = f'Error: to make a query for {table} table, you must pass at least one of these parameters: {necessary_args}.'
         super().__init__(message)
 
 class RowAlreadyExists(Exception):
-    def __init__(self, table):
+    def __init__(self, table: Base):
         self.__message = f'Error: already exists a row in {table} table with at least one unique column with the same value.'
 
         super().__init__(self.__message)
@@ -12,10 +15,10 @@ class RowAlreadyExists(Exception):
 class BasePackage():
     session = None
 
-    def __init__(self, session_scope):
-        self.session_scope = session_scope
+    def __init__(self, session_scope: Callable):
+        self.session_scope: Callable = session_scope
 
-    def upsert_object(self, table, **kwargs):
+    def upsert_object(self, table: Base, **kwargs: object) -> Tuple[Optional[Base], Optional[Exception]]:
         """
         This function upserts an object in the given table.
 
@@ -39,7 +42,7 @@ class BasePackage():
 
             return None, err
 
-    def get_objects_by_attr(self, table, attr, values=[]):
+    def get_objects_by_attr(self, table: Base, attr: object, values: List[object] = list()) -> Tuple[Optional[List[object]], Optional[Exception]]:
         """
         This function gets all the objects whose attr is in values list.
 
@@ -65,7 +68,7 @@ class BasePackage():
         else:
             return [], None
 
-    def get_all_objects(self, table):
+    def get_all_objects(self, table: Base) -> Tuple[Optional[List[object]], Optional[Exception]]:
         """
         This function gets all the objects in the given table.
 
