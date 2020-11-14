@@ -69,10 +69,12 @@ class SubPackageAnnouncements():
 
     def deactivateAdvert(self, advertId: str) -> None:
         databaseSubsystem = SubPackageAdverts(self.session_scope)
+        advertsDataSubsystem = SubPackageAdvertsData(self.session_scope)
 
         advert = databaseSubsystem.get_by_attr(Adverts.id, [advertId])[0][0]
+        advertData = advertsDataSubsystem.get_by_attr(AdvertsData.id, [advert.data])[0][0]
 
-        databaseSubsystem.upsert(False, advert.prices, advert.locator, advert.instrument)
+        databaseSubsystem.upsert(False, advertData.prices, advertData.locator, advertData.instrument)
 
     def saveNewAdvert(self, listOfPricesInBRLByDurationInDays: List[Tuple[float, int]], locatorEmail: str, instrumentClass: str, instrumentType: str, instrumentBrand: str = '', instrumentModel: str = '', instrumentSerialCode: str = '') -> None:
         if instrumentClass.lower() not in ['cordas', 'sopro', 'percussão']:

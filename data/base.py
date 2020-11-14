@@ -1,5 +1,9 @@
 from .models import Base
 from typing import Tuple, List, Optional, Callable
+from sqlalchemy.dialects.postgresql import insert
+from sqlalchemy.exc import IntegrityError
+from psycopg2.errors import UniqueViolation
+from sqlalchemy.sql import table, column, select, update, insert
 
 class BadRequestForQuery(Exception):
     def __init__(self, table: Base, necessary_args: List[object]):
@@ -34,6 +38,18 @@ class BasePackage():
             with self.session_scope() as session:
                 obj = table(**kwargs)
                 session.add(obj)
+                session.commit()
+
+            return obj, None
+        except IntegrityError as e:
+            assert isinstance(e.orig, UniqueViolation)
+            print('EXCESSAO - ABORT ABORT')
+            with self.session_scope() as session:
+                obj = table(**kwargs)
+                u = update(table)
+                u = u.values(**kwargs)
+                u = u.where(table.id == kwargs['id'])
+                session.execute(u)
                 session.commit()
 
             return obj, None
