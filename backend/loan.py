@@ -57,10 +57,8 @@ class LoansBackend():
         self.checkLoanPeriod(withdrawal, devolution)
 
         announcements = SubPackageAnnouncements(self.session_scope)
-        #pricesByDuration = announcements.loadListOfPricesInBRLByDurationInDaysBrandById(ad_id)
-        pricesByDuration = [(8,2),(14,5)]
+        pricesByDuration = announcements.loadListOfPricesInBRLByDurationInDaysBrandById(ad_id)
         pricesByDuration = sorted(pricesByDuration, key=lambda x: x[1], reverse=True)
-
         loan_duration = devolution - withdrawal
         partial_duration = loan_duration.days
 
