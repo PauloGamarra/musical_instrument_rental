@@ -1,4 +1,4 @@
-from models import Base
+from .models import Base
 from typing import Tuple, List, Optional, Callable
 
 class BadRequestForQuery(Exception):

@@ -192,6 +192,8 @@ def pagamento():
     retirada = datas["retirada_instrumento"]
     devolucao = datas["devolucao_instrumento"]
 
+    charge = lb.computeCharge(retirada, devolucao, session["id"])
+
     if request.method == "GET":
         return render_template('pagina_pagamento.html', retirada=retirada, devolucao=devolucao, charge=charge)
     else:

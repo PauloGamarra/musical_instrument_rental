@@ -10,7 +10,7 @@ class DatabaseConnector:
     Session = None
 
     @classmethod
-    def connect(cls: DatabaseConnector) -> NoReturn:
+    def connect(cls: object) -> NoReturn:
         """Configure and connect the database.
 
         It is responsible for creating an engine for the URI provided and
@@ -21,7 +21,7 @@ class DatabaseConnector:
         cls.Session.configure(bind=engine)
 
     @classmethod
-    def get_session_scope(cls: DatabaseConnector) -> Callable:
+    def get_session_scope(cls: object) -> Callable:
         @contextmanager
         def session_scope(raise_exception: bool = True) -> NoReturn:
             """Provide a transactional scope around a series of operations.
@@ -40,7 +40,7 @@ class DatabaseConnector:
         return session_scope
 
     @classmethod
-    def _build_uri(cls: DatabaseConnector) -> str:
+    def _build_uri(cls: object) -> str:
         user = cfg["RENTAL_DATABASE_USER"]
         password = cfg["RENTAL_DATABASE_PASSWORD"]
         host = cfg["RENTAL_DATABASE_HOST"]
