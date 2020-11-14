@@ -4,14 +4,16 @@ from datetime import date
 from backend.records import RecordsBackend
 from backend.announcement import SubPackageAnnouncements
 from data.auth import Auth
+from typing import NoReturn, Optional, Tuple
+
 
 
 
 class LoansBackend():
-    def __init__(self, session_scope):
+    def __init__(self, session_scope) -> NoReturn:
         self.session_scope = session_scope
 
-    def loadLocatorData(self, ad_id:str):
+    def loadLocatorData(self, ad_id:str) -> dict:
         AdvertsSubsystem = SubPackageAdverts(self.session_scope)
         AdvertsDataSubsystem = SubPackageAdvertsData(self.session_scope)
         UsersSubsystem = Auth(self.session_scope)
@@ -23,7 +25,7 @@ class LoansBackend():
         return {'name': locator.name,
                 'email': locator.email}
 
-    def checkLoanPeriod(self, withdrawal, devolution):
+    def checkLoanPeriod(self, withdrawal: date, devolution: date) -> NoReturn:
         if withdrawal < date.today():
             raise Exception('Invalid withdrawal date')
         if devolution < date.today():
@@ -32,21 +34,21 @@ class LoansBackend():
             raise Exception('Invalid loan period')
 
 
-    def saveNewLoan(self, withdrawal: date, devolution: date, lessee:str, ad_data_id:str):
+    def saveNewLoan(self, withdrawal: date, devolution: date, lessee:str, ad_data_id:str) -> NoReturn:
         self.checkLoanPeriod(withdrawal, devolution)
 
         loansSubsystem = SubPackageLoans(self.session_scope)
 
-        return loansSubsystem.upsert(withdrawal, devolution, lessee.lower(), ad_data_id.lower())
+        loansSubsystem.upsert(withdrawal, devolution, lessee.lower(), ad_data_id.lower())
 
-    def saveNewLoanByAdId(self, withdrawal: date, devolution: date, lessee:str, ad_id:str):
+    def saveNewLoanByAdId(self, withdrawal: date, devolution: date, lessee:str, ad_id:str) -> NoReturn:
         AdvertsSubsystem = SubPackageAdverts(self.session_scope)
 
         ad_data_id = AdvertsSubsystem.get_by_attr(Adverts.id, [ad_id])[0][0].data
 
-        return self.saveNewLoan(withdrawal, devolution, lessee, ad_data_id)
+        self.saveNewLoan(withdrawal, devolution, lessee, ad_data_id)
 
-    def computeCharge(self, withdrawal: str, devolution: str, ad_id:str):
+    def computeCharge(self, withdrawal: str, devolution: str, ad_id:str) -> float:
 
 
         withdrawal = self.stringToDate(withdrawal)
@@ -71,12 +73,12 @@ class LoansBackend():
         return charge
 
 
-    def deactivate_ad(self, ad_id):
+    def deactivate_ad(self, ad_id: str) -> NoReturn:
         ad_backend = SubPackageAnnouncements(self.session_scope)
 
         ad_backend.deactivateAdvert(ad_id)
 
-    def saveNewRecordByLoanData(self,withdrawal, devolution, lessee, ad_id, rating):
+    def saveNewRecordByLoanData(self, withdrawal: date, devolution: date, lessee: str, ad_id: str, rating: int=3) -> NoReturn:
         loanSubsystem = SubPackageLoans(self.session_scope)
         records = RecordsBackend(self.session_scope)
 
@@ -85,15 +87,15 @@ class LoansBackend():
                                                                         loan.lessee == lessee and loan.ad == ad_id
                   ][0].id
 
-        records.saveNewRecord(loan_id, rating=8)
+        records.saveNewRecord(loan_id, rating)
 
-    def stringToDate(self, date_string):
+    def stringToDate(self, date_string: str) -> date:
 
         date_elements = [int(element) for element in date_string.split('-')]
 
         return date(date_elements[0], date_elements[1], date_elements[2])
 
-    def processLoan(self, withdrawal, devolution, lessee, ad_id, rating=3):
+    def processLoan(self, withdrawal: str, devolution: str, lessee:str, ad_id:str, rating: int=3) -> NoReturn:
 
         withdrawal = self.stringToDate(withdrawal)
         devolution = self.stringToDate(devolution)
