@@ -23,7 +23,7 @@
 		<th>Locatário</th>
 		<th>Avaliação</th>
   	</tr>
-{%for record in lesseeRecords%}
+{%for record in locatorRecords%}
 	<tr>
 		<td>{{record["advert"]["instrument"]["instrument_class"]}}</td>
 		<td>{{record["advert"]["instrument"]["instrument"]}}</td>
@@ -46,14 +46,14 @@
 		<th>Data de Devolução</th>
 		<th>Locador</th>
   	</tr>
-{%for record in locatorRecords%}
+{%for record in lesseeRecords%}
 	<tr>
 		<td>{{record["advert"]["instrument"]["instrument_class"]}}</td>
 		<td>{{record["advert"]["instrument"]["instrument"]}}</td>
 		<td>{{record["advert"]["instrument"]["brand"]}}</td>
 		<td>{{record["loan"]["withdrawal"]}}</td>
 		<td>{{record["loan"]["devolution"]}}</td>
-		<td>{{record["loan"]["lessee"]["name"]}}</td>
+		<td>{{record["advert"]["locator"]["name"]}}</td>
 	</tr>
 {%endfor%}
 </table>
