@@ -1,0 +1,27 @@
+title Fazer login
+
+actor Usuário
+
+participant Lógica de autentificação
+participant Lógica de dados
+participant Banco de dados
+
+Usuário->Lógica de autentificação: O usuário insere o e-mail e senha.
+Lógica de autentificação->Lógica de dados: É requerido um usuário com o e-mail recebido
+Lógica de dados->Banco de dados: Uma query é feita no banco utilizando o e-mail como filtro
+
+alt Não existe um usuário com este e-mail cadastrado
+Lógica de dados<--Banco de dados: É retornado a informação que não há usuário cadastrado com este e-mail
+Lógica de autentificação<--Lógica de dados: É retornado a informação que não há usuário cadastrado com este e-mail
+Usuário<--Lógica de autentificação: O usuário é informado que o e-mail não se refere a nenhum usuário cadastrado
+else Existe um usuário com este e-mail cadastrado
+Lógica de dados<--Banco de dados: O usuário é retornado
+Lógica de autentificação<--Lógica de dados: É retornado o usuário
+Lógica de autentificação<-Lógica de autentificação: As senhas são comparadas
+    alt As senhas são iguais
+    Lógica de autentificação<-Lógica de autentificação: O login é realizado
+    Usuário<--Lógica de autentificação: O usuário é redirecionado para a interface informando que o login foi efetuado
+    else As senhas são diferentes
+    Usuário<--Lógica de autentificação: O usuário é informado que a senha difere da referente ao usuário cadastrado
+    end
+end

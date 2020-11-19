@@ -1,0 +1,21 @@
+title Destacar Instrumentos Populares
+
+actor Usuário
+
+Lógica de Destaques->Banco de Dados: Verifica se o usuário
+alt O usuário não é administrador
+Banco de Dados->Lógica de Destaques: Informa que o usuário não é administrador.
+Lógica de Destaques->Usuário: Informa que o procedimento não pode ser iniciado.
+else O usuário é administrador
+Banco de Dados->Lógica de Destaques: Informa que o usuário é administrador.
+Lógica de Destaques->Banco de Dados: A lógica solicita a lista de todos os tipos de instrumentos disponíveis.
+Banco de Dados->Lógica de Destaques: O banco de dados retorna a lista solicitada.
+Lógica de Destaques->Usuário: É exibido ao administrador a lista de instrumentos disponíveis.
+Usuário->Lógica de Destaques: O administrador seleciona 10 instrumentos a serem destacados.
+Lógica de Destaques->Lógica de Anúncios: A lógica de destaques diz para a lógica de anúncios os anúncios que devem ser modificados para ficar em destaque.
+Lógica de Anúncios->Banco de Dados: O sistema de anúncio solicita ao banco que os anúncios sejam atualizados.
+Banco de Dados->Lógica de Anúncios: O banco de dados informa que a operação foi concluída.
+Lógica de Anúncios->Lógica de Destaques: A lógica de anúncios informa que a operação foi concluída.
+Lógica de Destaques->Usuário: A lógica de destaques informa que a operação foi concluída.
+
+end

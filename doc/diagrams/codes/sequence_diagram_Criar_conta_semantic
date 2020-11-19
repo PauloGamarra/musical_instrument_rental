@@ -1,0 +1,27 @@
+title Criar conta
+
+
+actor Usuário
+
+participant Lógica de autentificação
+participant Lógica de dados
+participant Banco de dados
+
+Usuário->Lógica de autentificação: O usuário insere o seu nome, e-mail e senha.
+Lógica de autentificação->Lógica de dados: É requerido um usuário com o e-mail recebido
+Lógica de dados->Banco de dados: Uma query é feita no banco utilizando o e-mail como filtro
+
+alt Existe um usuário com este e-mail cadastrado
+Lógica de dados<--Banco de dados: O usuário é retornado
+Lógica de autentificação<--Lógica de dados: O usuário é retornado
+Usuário<--Lógica de autentificação: O usuário é informado que o e-mail já está cadastrado
+else Não existe um usuário com este e-mail cadastrado
+Lógica de dados<--Banco de dados: É retornado a informação que não há usuário cadastrado com este e-mail
+Lógica de autentificação<--Lógica de dados: É retornado a informação que não há usuário cadastrado com este e-mail
+Lógica de autentificação->Lógica de dados: O usuário é enviado para ser criado
+Lógica de dados->Banco de dados: Uma query de inserção é feita para inserir o usuário com os dados informados
+Lógica de dados<--Banco de dados: O usuário criado é retornado
+Lógica de autentificação<--Lógica de dados: É retornado sucesso
+Lógica de autentificação<-Lógica de autentificação: É feito o login com o usuário criado
+Usuário<--Lógica de autentificação: O usuário é redirecionado para a interface informando que a conta foi criada
+end

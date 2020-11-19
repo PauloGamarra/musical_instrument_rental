@@ -1,0 +1,9 @@
+title Anunciar Instrumento
+
+actor Usuário
+
+Usuário->Lógica de Anúncios: O usuário insere os dados de criação de anúncio
+Lógica de Anúncios->Lógica de Anúncios: Verifica se os dados inseridos estão corretos
+Lógica de Anúncios->Banco de Dados: Insere os dados no banco de dados
+Banco de Dados->Lógica de Anúncios: Banco de dados informa sucesso na inserção.
+Lógica de Anúncios->Usuário: Lógica de anúncios informa usuário sobre sucesso na inserção.

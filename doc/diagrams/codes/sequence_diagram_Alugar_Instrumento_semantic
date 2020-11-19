@@ -1,0 +1,30 @@
+title Alugar Instrumento
+
+actor Locatário
+
+Lógica de Empréstimos->Banco de Dados:Lógica de Anúncios solicita dados do anuncio escolhido
+
+Banco de Dados->Lógica de Empréstimos:Banco de dados informa as informações do anúncio
+
+Locatário<-Lógica de Empréstimos: Lógica de Empréstimos exibe ao usuário as informações\ndo anuncio  selecionado e do locador
+
+Locatário->Lógica de Empréstimos: O locatário seleciona as datas de retirada e devolução
+
+
+Lógica de Empréstimos->Sistema de Pagamentos:Lógica de empréstimos informa o custo do empréstimo
+
+Sistema de Pagamentos->Locatário:Sistema de Pagamentos informa o custo e solicita informações do cartão de crédito do usuário
+
+Locatário->Sistema de Pagamentos:O locatário informa os dados do cartão de crédito
+
+Sistema de Pagamentos->Sistema de Pagamentos:O sistema de pagamentos valida \nas informações do cartão de crédito do usuário
+
+alt Pagamento falha
+Sistema de Pagamentos->Lógica de Empréstimos:Sistema de Pagamentos informa que o pagamento falhou
+Lógica de Empréstimos->Locatário: Lógica de empréstimos informa ao locatário que o pagamento falhou
+
+else Pagamento é realizado com sucesso
+Sistema de Pagamentos->Lógica de Empréstimos: Sistema de Pagamentos informa que o pagamento foi bem sucedido
+Lógica de Empréstimos->Locatário: Lógica de empréstimos informa ao locatário que o pagamento foi bem sucedido
+Lógica de Empréstimos->Banco de Dados: Uma query de inserção é feita para inserir os dados do novo empréstimo e registro
+end

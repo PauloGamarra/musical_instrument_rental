@@ -1,0 +1,23 @@
+title Consultar histórico
+
+actor Usuário
+
+participant Lógica de históricos
+participant Lógica de dados
+participant Banco de dados
+
+alt Como locador
+Usuário->Lógica de históricos: O usuário pede para verificar os empréstimos que ele realizou como locador
+Lógica de históricos->Lógica de dados: É requisitado todos os empréstimos em que o usuário é o locador
+Lógica de dados->Banco de dados: É feita uma query para selecionar os empréstimos com filtragem a partir do locador
+Lógica de dados<--Banco de dados: É retornado o resultado da query
+Lógica de históricos<--Lógica de dados: Os empréstimos filtrados são retornados
+Usuário<--Lógica de históricos: O usuário é redirecionado para uma página contendo todos os registros históricos de empréstimos em que ele era locador
+else Como locatário
+Usuário->Lógica de históricos: O usuário pede para verificar os empréstimos que ele realizou como locatário
+Lógica de históricos->Lógica de dados: É requisitado todos os empréstimos em que o usuário é o locatário
+Lógica de dados->Banco de dados: É feita uma query para selecionar os empréstimos com filtragem a partir do locatário
+Lógica de dados<--Banco de dados: É retornado o resultado da query
+Lógica de históricos<--Lógica de dados: Os empréstimos filtrados são retornados
+Usuário<--Lógica de históricos: O usuário é redirecionado para uma página contendo todos os registros históricos de empréstimos em que ele era locatário
+end

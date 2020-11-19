@@ -1,7 +1,8 @@
-https://imgur.com/a/ZAo75nG
+Todos os diagramas: https://imgur.com/a/aNv9UEt
 
+Diagrama de pacotes: https://i.imgur.com/vXY8zyU.png
 Diagrama de classes: https://i.imgur.com/0oYIht8.png
-Diagramas de sequência:
+Diagramas de sequência funcionais:
     - UC1: https://i.imgur.com/MYkHBlg.png
     - UC2: https://i.imgur.com/2lODbgL.png
     - UC3: https://i.imgur.com/lHSJoVN.png
@@ -9,3 +10,11 @@ Diagramas de sequência:
     - UC5: https://i.imgur.com/CBn4OVR.png
     - UC6: https://i.imgur.com/CoUZafP.png
     - UC7: https://i.imgur.com/oURkcrt.png
+Diagramas de sequência semânticos:
+    - UC1: https://i.imgur.com/Z8KrovL.png
+    - UC2: https://i.imgur.com/H5OnS0R.png
+    - UC3: https://i.imgur.com/hs0qdGs.png
+    - UC4: https://i.imgur.com/BtSR8im.png
+    - UC5: https://i.imgur.com/Aqr54w2.png
+    - UC6: https://i.imgur.com/NwXPoSx.png
+    - UC7: https://i.imgur.com/QWm6puQ.png

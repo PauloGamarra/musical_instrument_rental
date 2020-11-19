@@ -1,0 +1,15 @@
+title Buscar Instrumento
+
+actor Usuário
+
+Lógica de Anúncios->Banco de Dados: A lógica solicita a lista de todos os tipos de instrumentos disponíveis.
+Banco de Dados->Lógica de Anúncios: O banco de dados retorna a lista solicitada.
+Lógica de Anúncios->Usuário: A lógica de anúncios retorna para exibição a lista de tipos de instrumentos disponíveis, dando destaque aos tipos de instrumentos destacados pelo administrador.
+Usuário->Lógica de Anúncios: O usuário seleciona um tipo de instrumento.
+Lógica de Anúncios->Banco de Dados: A lógica solicita a lista de todos os anúncios para o tipo de instrumento selecionado.
+Banco de Dados->Lógica de Anúncios: O banco de dados retorna a lista solicitada.
+Lógica de Anúncios->Usuário: A lógica de anúncios retorna a lista de anúncios relacionados ao instrumento selecionado.
+Usuário->Lógica de Anúncios: O usuário seleciona um anúncio.
+Lógica de Anúncios->Banco de Dados: A lógica solicita os dados do anúncio selecionado.
+Banco de Dados->Lógica de Anúncios: O banco de dados retorna todos os dados do anúncio selecionado.
+Lógica de Anúncios->Usuário: A lógica de anúncios retorna os detalhes do anúncio ao usuário.
